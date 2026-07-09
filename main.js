@@ -243,9 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // =============================================================
   // 8. NEWSLETTER FORM
-  // =============================================================
   const newsletterForm = document.getElementById('newsletterForm');
 
   if (newsletterForm) {

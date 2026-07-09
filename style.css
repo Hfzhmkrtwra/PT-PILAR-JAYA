@@ -836,15 +836,21 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 2rem;
-  align-items: center;
+  align-items: stretch;
   justify-items: center;
 
   margin-top: 2rem;
 }
 
 .klien-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
   width: 100%;
-  padding: 1.5rem;
+  min-height: 100px;
+  padding: 1.5rem 0.5rem;
 
   font-weight: 600;
   text-align: center;
@@ -859,6 +865,14 @@ section {
 
 .klien-item:hover {
   transform: scale(1.05);
+}
+
+.klien-item i {
+  margin-bottom: 0.3rem;
+
+  font-size: 1.8rem;
+
+  color: var(--secondary);
 }
 
 /* ================================================================

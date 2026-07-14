@@ -141,21 +141,28 @@ document.addEventListener('DOMContentLoaded', function() {
       img: 'IMG-20260709-WA0111.jpg',
       fallback: 'IMG-20260709-WA0111.jpg',
       title: 'Desain - Proyek 1',
-      desc: 'Penataan ruang tamu dengan sentuhan minimalis.',
+      desc: 'Rumah cream dormitory - Tanggerang.',
       tag: 'Desain'
     },
     {
       img: 'IMG-20260709-WA0114.jpg',
       fallback: 'IMG-20260709-WA0114.jpg',
       title: 'Desain - Proyek 2',
-      desc: 'Kamar tidur dengan pencahayaan dan tata letak optimal.',
+      desc: 'Bani hafidz center - Subang.',
       tag: 'Desain'
     },
     {
       img: 'IMG-20260709-WA0112.jpg',
       fallback: 'IMG-20260709-WA0112.jpg',
       title: 'Desain - Proyek 3',
-      desc: 'Desain ruang kerja modern yang ergonomis.',
+      desc: 'Sentul edu center & residence.',
+      tag: 'Desain'
+    },
+    {
+      img: 'IMG-20260714-WA0001.jpg',
+      fallback: 'IMG-20260714-WA0001.jpg',
+      title: 'Desain - Proyek 4',
+      desc: 'Apartemen ketapang.',
       tag: 'Desain'
     },
 

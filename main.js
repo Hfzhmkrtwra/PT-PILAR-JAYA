@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  
+
   // 1. PRELOADER
   window.addEventListener('load', function() {
     const preloader = document.getElementById('preloader');
@@ -8,39 +8,37 @@ document.addEventListener('DOMContentLoaded', function() {
       preloader.style.display = 'none';
     }, 500);
   });
-  
+
   // 2. NAVBAR SCROLL EFFECT & BACK TO TOP
   const navbar = document.getElementById('navbar');
   const backToTop = document.getElementById('backToTop');
-  
+
   window.addEventListener('scroll', function() {
     const scrollY = window.scrollY;
     navbar.classList.toggle('scrolled', scrollY > 50);
     backToTop.classList.toggle('show', scrollY > 600);
   });
-  
+
   // 3. MOBILE MENU
   const hamburger = document.getElementById('hamburger');
   const navMenu = document.getElementById('navMenu');
-  
+
   hamburger.addEventListener('click', function() {
     navMenu.classList.toggle('active');
     hamburger.classList.toggle('active');
   });
-  
+
   document.querySelectorAll('.nav-link').forEach(function(link) {
     link.addEventListener('click', function() {
       navMenu.classList.remove('active');
       hamburger.classList.remove('active');
     });
   });
-  
-  // =============================================================
-  // 4. STAT COUNTER (Intersection Observer)
-  // =============================================================
+
+  // 4. STAT COUNTER
   const statNumbers = document.querySelectorAll('.stat-number');
   const observerOptions = { threshold: 0.5 };
-  
+
   const statObserver = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
@@ -48,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const target = parseInt(el.getAttribute('data-target'), 10);
         let count = 0;
         const speed = target / 50;
-        
+
         function updateCount() {
           if (count < target) {
             count += speed;
@@ -58,22 +56,22 @@ document.addEventListener('DOMContentLoaded', function() {
             el.innerText = target;
           }
         }
-        
+
         updateCount();
         statObserver.unobserve(el);
       }
     });
   }, observerOptions);
-  
+
   statNumbers.forEach(function(num) {
     statObserver.observe(num);
   });
-  
+
   // 5. TESTIMONIAL SLIDER
   const slides = document.querySelectorAll('.testimonial-slide');
   const dots = document.querySelectorAll('.testimonial-dots .dot');
   let currentSlide = 0;
-  
+
   function showSlide(index) {
     slides.forEach(function(slide) {
       slide.classList.remove('active');
@@ -81,25 +79,25 @@ document.addEventListener('DOMContentLoaded', function() {
     dots.forEach(function(dot) {
       dot.classList.remove('active');
     });
-    
+
     slides[index].classList.add('active');
     dots[index].classList.add('active');
     currentSlide = index;
   }
-  
+
   dots.forEach(function(dot) {
     dot.addEventListener('click', function() {
       const index = parseInt(this.dataset.index, 10);
       showSlide(index);
     });
   });
-  
+
   setInterval(function() {
     const next = (currentSlide + 1) % slides.length;
     showSlide(next);
   }, 5000);
-  
-  // 6. GALERI – RENDER & LIGHTBOX
+
+  // 6. GALERI – RENDER & LIGHTBOX (dengan dukungan kolase)
   const galeriData = [
     // --- Proyek Residensial ---
     {
@@ -137,139 +135,158 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Proyek pembangunan cluster besar tipe 47 dan 39 di Bukit Freesia yang telah selesai.',
       tag: 'Residensial'
     },
-    {
-      img: 'https://images.unsplash.com/photo-1590674899484-d5640d9da1bc?w=500&h=350&fit=crop',
-      fallback: 'https://images.pexels.com/photos/1204649/pexels-photo-1204649.jpeg?w=500&h=350&fit=crop',
-      title: 'Interior Design & Build',
-      desc: 'Layanan desain interior dan pembangunan ruang fungsional untuk berbagai kebutuhan.',
-      tag: 'Desain Interior'
-    },
-    
-    // --- Tambahan Desain (5 gambar baru) ---
-    {
-      img: 'IMG-20260709-WA0110.jpg',
-      fallback: 'IMG-20260709-WA0110.jpg',
-      title: 'Desain - Proyek 1',
-      desc: 'Konsep desain interior modern untuk ruang hunian.',
-      tag: 'Desain'
-    },
+
+    // --- Tambahan Desain (sebelumnya) ---
     {
       img: 'IMG-20260709-WA0111.jpg',
       fallback: 'IMG-20260709-WA0111.jpg',
-      title: 'Desain - Proyek 2',
+      title: 'Desain - Proyek 1',
       desc: 'Penataan ruang tamu dengan sentuhan minimalis.',
-      tag: 'Desain'
-    },
-    {
-      img: 'IMG-20260709-WA0113.jpg',
-      fallback: 'IMG-20260709-WA0113.jpg',
-      title: 'Desain - Proyek 3',
-      desc: 'Desain dapur dan ruang makan yang fungsional.',
       tag: 'Desain'
     },
     {
       img: 'IMG-20260709-WA0114.jpg',
       fallback: 'IMG-20260709-WA0114.jpg',
-      title: 'Desain - Proyek 4',
+      title: 'Desain - Proyek 2',
       desc: 'Kamar tidur dengan pencahayaan dan tata letak optimal.',
       tag: 'Desain'
     },
     {
       img: 'IMG-20260709-WA0112.jpg',
       fallback: 'IMG-20260709-WA0112.jpg',
-      title: 'Desain - Proyek 5',
+      title: 'Desain - Proyek 3',
       desc: 'Desain ruang kerja modern yang ergonomis.',
       tag: 'Desain'
+    },
+
+    // --- KOLASE (3 gambar jadi satu) ---
+    {
+      isCollage: true,
+      images: [
+        'IMG-20260709-WA0155.jpg',
+        'IMG-20260709-WA0154.jpg',
+        'IMG-20260709-WA0153.jpg'
+      ],
+      fallback: 'IMG-20260709-WA0155.jpg', // fallback untuk lightbox
+      title: 'Desain Interior',
+      desc: 'Koleksi desain interior dari berbagai proyek, menampilkan konsep ruang yang estetik dan fungsional.',
+      tag: 'Desain Interior'
     }
   ];
-  
+
   const galeriGrid = document.getElementById('galeriGrid');
-  
+
   if (galeriGrid) {
     let html = '';
-    
+
     galeriData.forEach(function(item) {
-      html += `
-        <div class="galeri-item"
-             data-img="${item.img}"
-             data-fallback="${item.fallback}"
-             data-title="${item.title}"
-             data-desc="${item.desc}">
-          <div class="galeri-image">
-            <img src="${item.img}"
-                 alt="${item.title}"
-                 loading="lazy"
-                 onerror="this.src='${item.fallback}'">
-            <div class="galeri-overlay">
-              <i class="fas fa-search-plus"></i>
+      if (item.isCollage) {
+        // Buat kartu kolase dengan 3 gambar dalam grid
+        html += `
+          <div class="galeri-item collage-item"
+               data-img="${item.images[0]}"
+               data-fallback="${item.fallback}"
+               data-title="${item.title}"
+               data-desc="${item.desc}">
+            <div class="galeri-image collage-grid">
+              ${item.images.map(function(src) {
+                return `<img src="${src}" alt="${item.title}" loading="lazy" onerror="this.src='${item.fallback}'">`;
+              }).join('')}
+              <div class="galeri-overlay">
+                <i class="fas fa-search-plus"></i>
+              </div>
+            </div>
+            <div class="galeri-info">
+              <h4>${item.title}</h4>
+              <p>${item.desc}</p>
+              <span class="galeri-tag">${item.tag}</span>
             </div>
           </div>
-          <div class="galeri-info">
-            <h4>${item.title}</h4>
-            <p>${item.desc}</p>
-            <span class="galeri-tag">${item.tag}</span>
+        `;
+      } else {
+        // Kartu biasa (satu gambar)
+        html += `
+          <div class="galeri-item"
+               data-img="${item.img}"
+               data-fallback="${item.fallback}"
+               data-title="${item.title}"
+               data-desc="${item.desc}">
+            <div class="galeri-image">
+              <img src="${item.img}"
+                   alt="${item.title}"
+                   loading="lazy"
+                   onerror="this.src='${item.fallback}'">
+              <div class="galeri-overlay">
+                <i class="fas fa-search-plus"></i>
+              </div>
+            </div>
+            <div class="galeri-info">
+              <h4>${item.title}</h4>
+              <p>${item.desc}</p>
+              <span class="galeri-tag">${item.tag}</span>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      }
     });
-    
+
     galeriGrid.innerHTML = html;
-    
+
     // ---- Lightbox ----
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCaption = document.getElementById('lightboxCaption');
     const lightboxClose = document.getElementById('lightboxClose');
-    
+
     document.querySelectorAll('.galeri-item').forEach(function(item) {
       item.addEventListener('click', function() {
         const imgSrc = this.dataset.img;
         const fallbackSrc = this.dataset.fallback;
         const title = this.dataset.title;
         const desc = this.dataset.desc;
-        
+
         lightboxImg.src = imgSrc;
         lightboxImg.onerror = function() {
           lightboxImg.src = fallbackSrc;
         };
-        
+
         lightboxCaption.innerHTML = '<strong>' + title + '</strong><br>' + desc;
         lightbox.classList.add('active');
       });
     });
-    
+
     lightboxClose.addEventListener('click', function() {
       lightbox.classList.remove('active');
     });
-    
+
     lightbox.addEventListener('click', function(e) {
       if (e.target === this) {
         lightbox.classList.remove('active');
       }
     });
   }
-  
+
   // 7. CONTACT FORM
   const kontakForm = document.getElementById('kontakForm');
-  
+
   if (kontakForm) {
     kontakForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
       const successMsg = document.getElementById('formSuccess');
       successMsg.style.display = 'block';
-      
+
       this.reset();
-      
+
       setTimeout(function() {
         successMsg.style.display = 'none';
       }, 4000);
     });
   }
-  
+
   // 8. NEWSLETTER FORM
   const newsletterForm = document.getElementById('newsletterForm');
-  
+
   if (newsletterForm) {
     newsletterForm.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -277,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
       this.reset();
     });
   }
-  
+
   // 9. BACK TO TOP
   backToTop.addEventListener('click', function() {
     window.scrollTo({
@@ -285,5 +302,5 @@ document.addEventListener('DOMContentLoaded', function() {
       behavior: 'smooth'
     });
   });
-  
+
 });

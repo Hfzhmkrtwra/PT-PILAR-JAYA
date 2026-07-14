@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
       tag: 'Residensial'
     },
 
-    // --- Tambahan Desain (sebelumnya) ---
+    // --- Desain (single image) ---
     {
       img: 'IMG-20260709-WA0111.jpg',
       fallback: 'IMG-20260709-WA0111.jpg',
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
       tag: 'Desain'
     },
 
-    // --- KOLASE (3 gambar jadi satu) ---
+    // --- KOLASE 1 (3 gambar) ---
     {
       isCollage: true,
       images: [
@@ -167,9 +167,24 @@ document.addEventListener('DOMContentLoaded', function() {
         'IMG-20260709-WA0154.jpg',
         'IMG-20260709-WA0153.jpg'
       ],
-      fallback: 'IMG-20260709-WA0155.jpg', // fallback untuk lightbox
+      fallback: 'IMG-20260709-WA0155.jpg',
       title: 'Desain Interior',
       desc: 'Koleksi desain interior dari berbagai proyek, menampilkan konsep ruang yang estetik dan fungsional.',
+      tag: 'Desain Interior'
+    },
+
+    // --- KOLASE 2 (4 gambar - Mushola) ---
+    {
+      isCollage: true,
+      images: [
+        'IMG-20260709-WA0133.jpg',
+        'IMG-20260709-WA0139.jpg',
+        'IMG-20260709-WA0135.jpg',
+        'IMG-20260709-WA0138.jpg'
+      ],
+      fallback: 'IMG-20260709-WA0140.jpg',
+      title: 'Desain Interior',
+      desc: 'Mushola dengan desain interior yang estetik, nyaman, dan fungsional untuk tempat ibadah.',
       tag: 'Desain Interior'
     }
   ];
@@ -181,14 +196,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     galeriData.forEach(function(item) {
       if (item.isCollage) {
-        // Buat kartu kolase dengan 3 gambar dalam grid
+        // Tentukan class grid berdasarkan jumlah gambar
+        let gridClass = 'collage-grid';
+        if (item.images.length === 4) {
+          gridClass += ' collage-grid-4';
+        }
+
         html += `
           <div class="galeri-item collage-item"
                data-img="${item.images[0]}"
                data-fallback="${item.fallback}"
                data-title="${item.title}"
                data-desc="${item.desc}">
-            <div class="galeri-image collage-grid">
+            <div class="galeri-image ${gridClass}">
               ${item.images.map(function(src) {
                 return `<img src="${src}" alt="${item.title}" loading="lazy" onerror="this.src='${item.fallback}'">`;
               }).join('')}

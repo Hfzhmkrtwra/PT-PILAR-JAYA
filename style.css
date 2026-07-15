@@ -1,6 +1,4 @@
-/* ================================================================
-   RESET & BASE
-   ================================================================ */
+/* == RESET & BASE == */
 * {
   margin: 0;
   padding: 0;
@@ -42,9 +40,7 @@ img {
   height: auto;
 }
 
-/* ================================================================
-   PRELOADER
-   ================================================================ */
+/* == PRELOADER == */
 .preloader {
   position: fixed;
   inset: 0;
@@ -79,17 +75,18 @@ img {
 }
 
 @keyframes bounce {
-  0%, 100% {
+  
+  0%,
+  100% {
     transform: translateY(0);
   }
+  
   50% {
     transform: translateY(-15px);
   }
 }
 
-/* ================================================================
-   NAVBAR
-   ================================================================ */
+/* == NAVBAR == */
 .navbar {
   position: fixed;
   top: 0;
@@ -186,9 +183,7 @@ img {
   transition: var(--transition);
 }
 
-/* ================================================================
-   HERO
-   ================================================================ */
+/* == HERO == */
 .hero {
   position: relative;
   display: flex;
@@ -228,9 +223,12 @@ img {
 }
 
 @keyframes float {
-  0%, 100% {
+  
+  0%,
+  100% {
     transform: translateY(0);
   }
+  
   50% {
     transform: translateY(-10px);
   }
@@ -352,17 +350,18 @@ img {
 }
 
 @keyframes bounceDown {
-  0%, 100% {
+  
+  0%,
+  100% {
     transform: translateX(-50%) translateY(0);
   }
+  
   50% {
     transform: translateX(-50%) translateY(10px);
   }
 }
 
-/* ================================================================
-   SECTIONS COMMON
-   ================================================================ */
+/* == SECTIONS COMMON == */
 section {
   padding: 5rem 5%;
 }
@@ -410,9 +409,7 @@ section {
   color: var(--text-light);
 }
 
-/* ================================================================
-   TENTANG
-   ================================================================ */
+/* == TENTANG == */
 .tentang-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -498,9 +495,7 @@ section {
   color: var(--secondary);
 }
 
-/* ================================================================
-   SEJARAH – TIMELINE
-   ================================================================ */
+/* == SEJARAH – TIMELINE == */
 .timeline {
   position: relative;
   max-width: 1000px;
@@ -595,9 +590,7 @@ section {
   opacity: 0.9;
 }
 
-/* ================================================================
-   LAYANAN
-   ================================================================ */
+/* == LAYANAN == */
 .layanan {
   background: #f4f7fc;
 }
@@ -633,9 +626,7 @@ section {
   color: var(--primary);
 }
 
-/* ================================================================
-   GALERI
-   ================================================================ */
+/* == GALERI == */
 .galeri-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -714,9 +705,7 @@ section {
   border-radius: 50px;
 }
 
-/* ================================================================
-   KOLASE (gabungan beberapa gambar dalam satu kartu)
-   ================================================================ */
+/* == KOLASE (gabungan beberapa gambar dalam satu kartu)== */
 .galeri-image.collage-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -763,9 +752,7 @@ section {
   opacity: 1;
 }
 
-/* ================================================================
-   KLIEN & MITRA
-   ================================================================ */
+/* == KLIEN & MITRA == */
 .klien {
   padding: 4rem 5%;
   background: var(--light);
@@ -807,9 +794,7 @@ section {
   color: var(--secondary);
 }
 
-/* ================================================================
-   TESTIMONIAL
-   ================================================================ */
+/* == TESTIMONIAL == */
 .testimonial-brief {
   padding: 4rem 5%;
   text-align: center;
@@ -873,9 +858,7 @@ section {
   background: var(--secondary);
 }
 
-/* ================================================================
-   KONTAK
-   ================================================================ */
+/* == KONTAK == */
 .kontak-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -931,9 +914,7 @@ section {
   color: green;
 }
 
-/* ================================================================
-   FOOTER
-   ================================================================ */
+/* == FOOTER == */
 .footer {
   padding-top: 3rem;
   color: var(--white);
@@ -1045,9 +1026,7 @@ section {
   opacity: 0.7;
 }
 
-/* ================================================================
-   BACK TO TOP
-   ================================================================ */
+/* == BACK TO TOP == */
 .back-to-top {
   position: fixed;
   bottom: 30px;
@@ -1072,9 +1051,7 @@ section {
   visibility: visible;
 }
 
-/* ================================================================
-   LIGHTBOX
-   ================================================================ */
+/* == LIGHTBOX == */
 .lightbox {
   position: fixed;
   inset: 0;
@@ -1117,17 +1094,16 @@ section {
   color: var(--white);
 }
 
-/* ================================================================
-   RESPONSIVE
-   ================================================================ */
+/* == RESPONSIVE == */
 
 /* Tablet & smaller desktop */
 @media (max-width: 992px) {
+  
   .tentang-content,
   .kontak-content {
     grid-template-columns: 1fr;
   }
-
+  
   .timeline-item {
     width: 100%;
     padding-right: 0;
@@ -1135,16 +1111,16 @@ section {
     text-align: left !important;
     left: 0 !important;
   }
-
+  
   .timeline-line {
     left: 30px;
   }
-
+  
   .timeline-dot {
     right: auto !important;
     left: 22px !important;
   }
-
+  
   .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -1155,7 +1131,7 @@ section {
   .hamburger {
     display: flex;
   }
-
+  
   .nav-menu {
     position: fixed;
     top: 70px;
@@ -1170,43 +1146,43 @@ section {
     transform: translateY(-150%);
     transition: transform 0.3s;
   }
-
+  
   .nav-menu.active {
     transform: translateY(0);
   }
-
+  
   .nav-logo-text {
     font-size: 0.85rem;
   }
-
+  
   .hero-stats {
     gap: 1rem 2rem;
   }
-
+  
   .stat-item {
     font-size: 1.8rem;
   }
-
+  
   .stat-item .stat-number {
     font-size: 1.8rem;
   }
-
+  
   .stat-item .stat-plus {
     font-size: 1.5rem;
   }
-
+  
   .stat-item .stat-label {
     font-size: 0.8rem;
   }
-
+  
   .galeri-grid {
     grid-template-columns: 1fr;
   }
-
+  
   .klien-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
+  
   .hero-logo-img img {
     height: 90px;
   }
@@ -1219,19 +1195,19 @@ section {
     justify-content: center;
     gap: 0.8rem 1.2rem;
   }
-
+  
   .stat-item {
     font-size: 1.4rem;
   }
-
+  
   .stat-item .stat-number {
     font-size: 1.4rem;
   }
-
+  
   .stat-item .stat-plus {
     font-size: 1.2rem;
   }
-
+  
   .stat-item .stat-label {
     font-size: 0.7rem;
   }

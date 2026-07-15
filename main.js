@@ -154,15 +154,15 @@ document.addEventListener('DOMContentLoaded', function() {
     {
       img: 'IMG-20260709-WA0112.jpg',
       fallback: 'IMG-20260709-WA0112.jpg',
-      title: 'Desain - Proyek 3',
-      desc: 'Sentul edu center & residence.',
+      title: 'Sentul Edu Center & Residence',
+      desc: 'Gambar desain 3D, sentul edu center & residence.',
       tag: 'Desain'
     },
     {
       img: 'IMG-20260714-WA0001.jpg',
       fallback: 'IMG-20260714-WA0001.jpg',
-      title: 'Desain - Proyek 4',
-      desc: 'Apartemen ketapang.',
+      title: 'Apartemen Ketapang',
+      desc: 'Gambar desain 3D, Apartemen ketapang - Tanggerang.',
       tag: 'Desain'
     },
 

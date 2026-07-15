@@ -140,15 +140,15 @@ document.addEventListener('DOMContentLoaded', function() {
     {
       img: 'IMG-20260709-WA0111.jpg',
       fallback: 'IMG-20260709-WA0111.jpg',
-      title: 'Desain - Proyek 1',
-      desc: 'Rumah cream dormitory - Tanggerang.',
+      title: 'Rumah Cream Dormitory.',
+      desc: 'Gambar desain 3D, rumah cream dormitory - Tanggerang.',
       tag: 'Desain'
     },
     {
       img: 'IMG-20260709-WA0114.jpg',
       fallback: 'IMG-20260709-WA0114.jpg',
-      title: 'Desain - Proyek 2',
-      desc: 'Bani hafidz center - Subang.',
+      title: 'Bani Hafidz Center',
+      desc: 'Gambar desain 3D, bani hafidz center - Subang.',
       tag: 'Desain'
     },
     {
@@ -193,6 +193,18 @@ document.addEventListener('DOMContentLoaded', function() {
       title: 'Desain Interior',
       desc: 'Mushola dengan desain interior yang estetik, nyaman, dan fungsional untuk tempat ibadah.',
       tag: 'Desain Interior'
+    },
+    // --- KOLASE 3 (2 gambar - Ruang Ganti) ---
+    {
+      isCollage: true,
+      images: [
+        'IMG-20260709-WA0136.jpg',
+        'IMG-20260709-WA0137.jpg'
+      ],
+      fallback: 'IMG-20260709-WA0136.jpg',
+      title: 'Desain Interior',
+      desc: 'Ruang ganti ini dirancang dengan konsep minimalis modern yang mengutamakan kenyamanan, kebersihan, dan efisiensi.',
+      tag: 'Desain Interior'
     }
   ];
 
@@ -205,9 +217,15 @@ document.addEventListener('DOMContentLoaded', function() {
       if (item.isCollage) {
         // Tentukan class grid berdasarkan jumlah gambar
         let gridClass = 'collage-grid';
-        if (item.images.length === 4) {
+        const count = item.images.length;
+        if (count === 4) {
           gridClass += ' collage-grid-4';
+        } else if (count === 3) {
+          gridClass += ' collage-grid-3';
+        } else if (count === 2) {
+          gridClass += ' collage-grid-2';
         }
+        // untuk 1 gambar (sebenarnya tidak mungkin karena isCollage) tetap pakai collage-grid
 
         html += `
           <div class="galeri-item collage-item"

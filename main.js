@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-
+  
   // 1. PRELOADER
   window.addEventListener('load', function() {
     const preloader = document.getElementById('preloader');
@@ -8,37 +8,37 @@ document.addEventListener('DOMContentLoaded', function() {
       preloader.style.display = 'none';
     }, 500);
   });
-
+  
   // 2. NAVBAR SCROLL EFFECT & BACK TO TOP
   const navbar = document.getElementById('navbar');
   const backToTop = document.getElementById('backToTop');
-
+  
   window.addEventListener('scroll', function() {
     const scrollY = window.scrollY;
     navbar.classList.toggle('scrolled', scrollY > 50);
     backToTop.classList.toggle('show', scrollY > 600);
   });
-
+  
   // 3. MOBILE MENU
   const hamburger = document.getElementById('hamburger');
   const navMenu = document.getElementById('navMenu');
-
+  
   hamburger.addEventListener('click', function() {
     navMenu.classList.toggle('active');
     hamburger.classList.toggle('active');
   });
-
+  
   document.querySelectorAll('.nav-link').forEach(function(link) {
     link.addEventListener('click', function() {
       navMenu.classList.remove('active');
       hamburger.classList.remove('active');
     });
   });
-
+  
   // 4. STAT COUNTER
   const statNumbers = document.querySelectorAll('.stat-number');
   const observerOptions = { threshold: 0.5 };
-
+  
   const statObserver = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const target = parseInt(el.getAttribute('data-target'), 10);
         let count = 0;
         const speed = target / 50;
-
+        
         function updateCount() {
           if (count < target) {
             count += speed;
@@ -56,22 +56,22 @@ document.addEventListener('DOMContentLoaded', function() {
             el.innerText = target;
           }
         }
-
+        
         updateCount();
         statObserver.unobserve(el);
       }
     });
   }, observerOptions);
-
+  
   statNumbers.forEach(function(num) {
     statObserver.observe(num);
   });
-
+  
   // 5. TESTIMONIAL SLIDER
   const slides = document.querySelectorAll('.testimonial-slide');
   const dots = document.querySelectorAll('.testimonial-dots .dot');
   let currentSlide = 0;
-
+  
   function showSlide(index) {
     slides.forEach(function(slide) {
       slide.classList.remove('active');
@@ -79,24 +79,24 @@ document.addEventListener('DOMContentLoaded', function() {
     dots.forEach(function(dot) {
       dot.classList.remove('active');
     });
-
+    
     slides[index].classList.add('active');
     dots[index].classList.add('active');
     currentSlide = index;
   }
-
+  
   dots.forEach(function(dot) {
     dot.addEventListener('click', function() {
       const index = parseInt(this.dataset.index, 10);
       showSlide(index);
     });
   });
-
+  
   setInterval(function() {
     const next = (currentSlide + 1) % slides.length;
     showSlide(next);
   }, 5000);
-
+  
   // 6. GALERI – RENDER & LIGHTBOX (dengan dukungan kolase)
   const galeriData = [
     // --- Proyek Residensial ---
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Proyek pembangunan cluster besar tipe 47 dan 39 di Bukit Freesia yang telah selesai.',
       tag: 'Residensial'
     },
-
+    
     // --- Desain (single image) ---
     {
       img: 'IMG-20260709-WA0111.jpg',
@@ -162,10 +162,10 @@ document.addEventListener('DOMContentLoaded', function() {
       img: 'IMG-20260714-WA0001.jpg',
       fallback: 'IMG-20260714-WA0001.jpg',
       title: 'Apartemen Ketapang',
-      desc: 'Gambar desain 3D, Apartemen ketapang - Tanggerang.',
+      desc: 'Gambar desain 3D, apartemen ketapang.',
       tag: 'Desain'
     },
-
+    
     // --- KOLASE 1 (3 gambar) ---
     {
       isCollage: true,
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Koleksi desain interior dari berbagai proyek, menampilkan konsep ruang yang estetik dan fungsional.',
       tag: 'Desain Interior'
     },
-
+    
     // --- KOLASE 2 (4 gambar - Mushola) ---
     {
       isCollage: true,
@@ -194,6 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Mushola dengan desain interior yang estetik, nyaman, dan fungsional untuk tempat ibadah.',
       tag: 'Desain Interior'
     },
+    
     // --- KOLASE 3 (2 gambar - Ruang Ganti) ---
     {
       isCollage: true,
@@ -205,28 +206,52 @@ document.addEventListener('DOMContentLoaded', function() {
       title: 'Desain Interior',
       desc: 'Ruang ganti ini dirancang dengan konsep minimalis modern yang mengutamakan kenyamanan, kebersihan, dan efisiensi.',
       tag: 'Desain Interior'
+    },
+
+    // --- KOLASE 4 (2 gambar - Tambahan Baru) ---
+    {
+      isCollage: true,
+      images: [
+        'IMG-20260709-WA0141.jpg',
+        'IMG-20260709-WA0144.jpg'
+      ],
+      fallback: 'IMG-20260709-WA0141.jpg',
+      title: 'Desain Interior',
+      desc: 'Ruang kerja ini mengusung konsep modern minimalis dengan dominasi warna netral seperti putih, abu-abu, hitam, dan aksen kayu terang.',
+      tag: 'Desain Interior'
+    },
+    {
+      isCollage: true,
+      images: [
+        'IMG-20260709-WA0126.jpg',
+        'IMG-20260709-WA0130.jpg',
+        'IMG-20260709-WA0131.jpg',
+        'IMG-20260709-WA0132.jpg'
+      ],
+      fallback: 'IMG-20260709-WA0126.jpg',
+      title: 'Desain Interior',
+      desc: 'Desain lounge mengombinasikan nuansa modern dengan sentuhan natural melalui penggunaan material kayu dan pencahayaan alami.',
+      tag: 'Desain Interior'
     }
   ];
-
+  
   const galeriGrid = document.getElementById('galeriGrid');
-
+  
   if (galeriGrid) {
     let html = '';
-
+    
     galeriData.forEach(function(item) {
       if (item.isCollage) {
         // Tentukan class grid berdasarkan jumlah gambar
         let gridClass = 'collage-grid';
-        const count = item.images.length;
-        if (count === 4) {
+        if (item.images.length === 4) {
           gridClass += ' collage-grid-4';
-        } else if (count === 3) {
+        } else if (item.images.length === 3) {
           gridClass += ' collage-grid-3';
-        } else if (count === 2) {
+        } else if (item.images.length === 2) {
           gridClass += ' collage-grid-2';
         }
-        // untuk 1 gambar (sebenarnya tidak mungkin karena isCollage) tetap pakai collage-grid
-
+        
         html += `
           <div class="galeri-item collage-item"
                data-img="${item.images[0]}"
@@ -274,64 +299,64 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
       }
     });
-
+    
     galeriGrid.innerHTML = html;
-
+    
     // ---- Lightbox ----
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCaption = document.getElementById('lightboxCaption');
     const lightboxClose = document.getElementById('lightboxClose');
-
+    
     document.querySelectorAll('.galeri-item').forEach(function(item) {
       item.addEventListener('click', function() {
         const imgSrc = this.dataset.img;
         const fallbackSrc = this.dataset.fallback;
         const title = this.dataset.title;
         const desc = this.dataset.desc;
-
+        
         lightboxImg.src = imgSrc;
         lightboxImg.onerror = function() {
           lightboxImg.src = fallbackSrc;
         };
-
+        
         lightboxCaption.innerHTML = '<strong>' + title + '</strong><br>' + desc;
         lightbox.classList.add('active');
       });
     });
-
+    
     lightboxClose.addEventListener('click', function() {
       lightbox.classList.remove('active');
     });
-
+    
     lightbox.addEventListener('click', function(e) {
       if (e.target === this) {
         lightbox.classList.remove('active');
       }
     });
   }
-
+  
   // 7. CONTACT FORM
   const kontakForm = document.getElementById('kontakForm');
-
+  
   if (kontakForm) {
     kontakForm.addEventListener('submit', function(e) {
       e.preventDefault();
-
+      
       const successMsg = document.getElementById('formSuccess');
       successMsg.style.display = 'block';
-
+      
       this.reset();
-
+      
       setTimeout(function() {
         successMsg.style.display = 'none';
       }, 4000);
     });
   }
-
+  
   // 8. NEWSLETTER FORM
   const newsletterForm = document.getElementById('newsletterForm');
-
+  
   if (newsletterForm) {
     newsletterForm.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -339,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
       this.reset();
     });
   }
-
+  
   // 9. BACK TO TOP
   backToTop.addEventListener('click', function() {
     window.scrollTo({
@@ -347,5 +372,5 @@ document.addEventListener('DOMContentLoaded', function() {
       behavior: 'smooth'
     });
   });
-
+  
 });

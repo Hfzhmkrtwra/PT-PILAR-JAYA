@@ -175,8 +175,8 @@ document.addEventListener('DOMContentLoaded', function() {
         'IMG-20260709-WA0153.jpg'
       ],
       fallback: 'IMG-20260709-WA0155.jpg',
-      title: 'Desain Interior',
-      desc: 'Koleksi desain interior dari berbagai proyek, menampilkan konsep ruang yang estetik dan fungsional.',
+      title: 'Taman',
+      desc: 'Desain outdoor menghadirkan lingkungan yang asri melalui perpaduan material kayu, pepohonan, dan elemen air.',
       tag: 'Desain Interior'
     },
     
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'IMG-20260709-WA0138.jpg'
       ],
       fallback: 'IMG-20260709-WA0140.jpg',
-      title: 'Desain Interior',
+      title: 'Mushola',
       desc: 'Mushola dengan desain interior yang estetik, nyaman, dan fungsional untuk tempat ibadah.',
       tag: 'Desain Interior'
     },
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'IMG-20260709-WA0137.jpg'
       ],
       fallback: 'IMG-20260709-WA0136.jpg',
-      title: 'Desain Interior',
+      title: 'Ruang Ganti',
       desc: 'Ruang ganti ini dirancang dengan konsep minimalis modern yang mengutamakan kenyamanan, kebersihan, dan efisiensi.',
       tag: 'Desain Interior'
     },
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'IMG-20260709-WA0144.jpg'
       ],
       fallback: 'IMG-20260709-WA0141.jpg',
-      title: 'Desain Interior',
+      title: 'Ruang Kerja',
       desc: 'Ruang kerja ini mengusung konsep modern minimalis dengan dominasi warna netral seperti putih, abu-abu, hitam, dan aksen kayu terang.',
       tag: 'Desain Interior'
     },
@@ -229,8 +229,8 @@ document.addEventListener('DOMContentLoaded', function() {
         'IMG-20260709-WA0132.jpg'
       ],
       fallback: 'IMG-20260709-WA0126.jpg',
-      title: 'Desain Interior',
-      desc: 'Desain lounge mengombinasikan nuansa modern dengan sentuhan natural melalui penggunaan material kayu dan pencahayaan alami.',
+      title: 'Cafetaria',
+      desc: 'Desain cafetaria ini mengombinasikan nuansa modern dengan sentuhan natural melalui penggunaan material kayu dan pencahayaan alami.',
       tag: 'Desain Interior'
     }
   ];

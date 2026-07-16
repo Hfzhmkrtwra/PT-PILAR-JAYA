@@ -220,6 +220,8 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Ruang kerja ini mengusung konsep modern minimalis dengan dominasi warna netral seperti putih, abu-abu, hitam, dan aksen kayu terang.',
       tag: 'Desain Interior'
     },
+    
+    // --- KOLASE 5 (4 gambar - Cafetaria) ---
     {
       isCollage: true,
       images: [
@@ -231,6 +233,21 @@ document.addEventListener('DOMContentLoaded', function() {
       fallback: 'IMG-20260709-WA0126.jpg',
       title: 'Cafetaria',
       desc: 'Desain cafetaria ini mengombinasikan nuansa modern dengan sentuhan natural melalui penggunaan material kayu dan pencahayaan alami.',
+      tag: 'Desain Interior'
+    },
+    
+    // --- KOLASE 6 (4 gambar - Cafetaria) ---
+    {
+      isCollage: true,
+      images: [
+        'IMG-20260709-WA0148.jpg',
+        'IMG-20260709-WA0149.jpg',
+        'IMG-20260709-WA0150.jpg',
+        'IMG-20260709-WA0151.jpg'
+      ],
+      fallback: 'IMG-20260709-WA0148.jpg',
+      title: 'Cafetaria',
+      desc: 'Area lounge ini dirancang dengan mengusung konsep modern kontemporer yang mengutamakan keseimbangan antara aspek estetika, kenyamanan, dan fungsionalitas.',
       tag: 'Desain Interior'
     }
   ];

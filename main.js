@@ -1,103 +1,305 @@
-document.addEventListener('DOMContentLoaded', function() {
-  
-  // 1. PRELOADER
-  window.addEventListener('load', function() {
-    const preloader = document.getElementById('preloader');
+/* ================================================================
+   PT PILAR JAYA KONTRUKSI — main.js (FINAL)
+   
+   Fitur:
+   - Preloader dengan timeout pengaman
+   - Navbar scroll effect + scroll-spy
+   - Mobile menu (klik luar, escape)
+   - Stat counter dengan easing
+   - Testimonial slider (auto-pause, swipe)
+   - Galeri: single + kolase, lightbox per-gambar
+   - Lightbox: escape, backdrop, focus return, body lock
+   - Form kontak → WhatsApp (pesan terisi otomatis)
+   - Konsultasi gratis (footer) → WhatsApp
+   - Back to top
+   - Menghormati prefers-reduced-motion
+   
+   Konfigurasi nomor WA ada di CONFIG di bawah.
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* ----------------------------------------------------------------
+     KONFIGURASI
+     Ganti nilai di sini jika nomor / pesan template berubah.
+     ---------------------------------------------------------------- */
+  const CONFIG = {
+    // Nomor WhatsApp tujuan (format internasional, tanpa '+' dan tanpa '0' depan)
+    waNumber: '6281578602901',
+    // Nama perusahaan untuk template pesan
+    companyName: 'PT Pilar Jaya Kontruksi',
+    // Interval testimonial (ms)
+    testimonialInterval: 5500,
+    // Threshold scroll untuk tombol back-to-top
+    backToTopThreshold: 600
+  };
+
+  /* ----------------------------------------------------------------
+     UTILITAS
+     ---------------------------------------------------------------- */
+  function reducedMotion() {
+    return window.matchMedia &&
+           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function escapeHtml(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function openWhatsApp(message) {
+    const url = 'https://wa.me/' + CONFIG.waNumber +
+                '?text=' + encodeURIComponent(message);
+    const win = window.open(url, '_blank', 'noopener,noreferrer');
+    // Fallback: popup diblokir → redirect di tab yang sama
+    if (!win) window.location.href = url;
+    return !!win;
+  }
+
+  /* ----------------------------------------------------------------
+     1. PRELOADER (dengan timeout pengaman)
+     ---------------------------------------------------------------- */
+  const preloader = document.getElementById('preloader');
+
+  function hidePreloader() {
+    if (!preloader || preloader.classList.contains('hide')) return;
     preloader.classList.add('hide');
-    setTimeout(function() {
+    setTimeout(function () {
       preloader.style.display = 'none';
     }, 500);
-  });
-  
-  // 2. NAVBAR SCROLL EFFECT & BACK TO TOP
+  }
+
+  if (document.readyState === 'complete') {
+    setTimeout(hidePreloader, 400);
+  } else {
+    window.addEventListener('load', function () {
+      setTimeout(hidePreloader, 400);
+    });
+  }
+  // Pengaman: preloader hilang setelah 4 detik
+  setTimeout(hidePreloader, 4000);
+
+  /* ----------------------------------------------------------------
+     2. NAVBAR SCROLL EFFECT & BACK TO TOP
+     ---------------------------------------------------------------- */
   const navbar = document.getElementById('navbar');
   const backToTop = document.getElementById('backToTop');
-  
-  window.addEventListener('scroll', function() {
+
+  function onScroll() {
     const scrollY = window.scrollY;
-    navbar.classList.toggle('scrolled', scrollY > 50);
-    backToTop.classList.toggle('show', scrollY > 600);
-  });
-  
-  // 3. MOBILE MENU
+    if (navbar) navbar.classList.toggle('scrolled', scrollY > 50);
+    if (backToTop) {
+      backToTop.classList.toggle('show', scrollY > CONFIG.backToTopThreshold);
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ----------------------------------------------------------------
+     3. MOBILE MENU
+     ---------------------------------------------------------------- */
   const hamburger = document.getElementById('hamburger');
   const navMenu = document.getElementById('navMenu');
-  
-  hamburger.addEventListener('click', function() {
-    navMenu.classList.toggle('active');
-    hamburger.classList.toggle('active');
-  });
-  
-  document.querySelectorAll('.nav-link').forEach(function(link) {
-    link.addEventListener('click', function() {
-      navMenu.classList.remove('active');
+
+  function closeMobileMenu() {
+    if (navMenu) navMenu.classList.remove('active');
+    if (hamburger) {
       hamburger.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  if (hamburger && navMenu) {
+    hamburger.addEventListener('click', function () {
+      const isOpen = navMenu.classList.toggle('active');
+      hamburger.classList.toggle('active', isOpen);
+      hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
-  });
-  
-  // 4. STAT COUNTER
-  const statNumbers = document.querySelectorAll('.stat-number');
-  const observerOptions = { threshold: 0.5 };
-  
-  const statObserver = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const target = parseInt(el.getAttribute('data-target'), 10);
-        let count = 0;
-        const speed = target / 50;
-        
-        function updateCount() {
-          if (count < target) {
-            count += speed;
-            el.innerText = Math.ceil(count);
-            requestAnimationFrame(updateCount);
-          } else {
-            el.innerText = target;
-          }
-        }
-        
-        updateCount();
-        statObserver.unobserve(el);
+
+    document.querySelectorAll('.nav-link').forEach(function (link) {
+      link.addEventListener('click', closeMobileMenu);
+    });
+
+    // Tutup menu saat klik di luar
+    document.addEventListener('click', function (e) {
+      if (!navMenu.classList.contains('active')) return;
+      if (navMenu.contains(e.target) || hamburger.contains(e.target)) return;
+      closeMobileMenu();
+    });
+
+    // Tutup dengan Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+        closeMobileMenu();
       }
     });
-  }, observerOptions);
-  
-  statNumbers.forEach(function(num) {
-    statObserver.observe(num);
-  });
-  
-  // 5. TESTIMONIAL SLIDER
+  }
+
+  /* ----------------------------------------------------------------
+     4. SCROLL-SPY untuk .nav-link.active
+     ---------------------------------------------------------------- */
+  const navLinks = document.querySelectorAll('.nav-link');
+  const navSections = Array.prototype.slice
+    .call(navLinks)
+    .map(function (link) {
+      const href = link.getAttribute('href');
+      return href && href.charAt(0) === '#' ? document.querySelector(href) : null;
+    })
+    .filter(Boolean);
+
+  function setActiveLink(id) {
+    navLinks.forEach(function (link) {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+    });
+  }
+
+  if (navSections.length && 'IntersectionObserver' in window) {
+    const spy = new IntersectionObserver(
+      function (entries) {
+        const visible = entries
+          .filter(function (en) { return en.isIntersecting; })
+          .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
+        if (visible.length) setActiveLink(visible[0].target.id);
+      },
+      { rootMargin: '-45% 0px -50% 0px', threshold: [0, 0.25, 0.5, 1] }
+    );
+    navSections.forEach(function (sec) { spy.observe(sec); });
+  }
+
+  /* ----------------------------------------------------------------
+     5. STAT COUNTER
+     ---------------------------------------------------------------- */
+  const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+
+  function runCounter(el) {
+    if (el.dataset.done === 'true') return;
+    el.dataset.done = 'true';
+
+    const target = parseInt(el.getAttribute('data-target'), 10) || 0;
+
+    if (reducedMotion()) {
+      el.textContent = target;
+      return;
+    }
+
+    const duration = 1400;
+    const start = performance.now();
+
+    function tick(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      el.textContent = Math.round(eased * target);
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (statNumbers.length && 'IntersectionObserver' in window) {
+    const statObserver = new IntersectionObserver(
+      function (entries, obs) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          runCounter(entry.target);
+          obs.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.4 }
+    );
+    statNumbers.forEach(function (n) { statObserver.observe(n); });
+  } else {
+    statNumbers.forEach(function (n) {
+      n.textContent = n.getAttribute('data-target');
+    });
+  }
+
+  /* ----------------------------------------------------------------
+     6. TESTIMONIAL SLIDER
+     ---------------------------------------------------------------- */
   const slides = document.querySelectorAll('.testimonial-slide');
   const dots = document.querySelectorAll('.testimonial-dots .dot');
   let currentSlide = 0;
-  
+  let testimonialTimer = null;
+
   function showSlide(index) {
-    slides.forEach(function(slide) {
-      slide.classList.remove('active');
-    });
-    dots.forEach(function(dot) {
-      dot.classList.remove('active');
-    });
-    
-    slides[index].classList.add('active');
-    dots[index].classList.add('active');
-    currentSlide = index;
+    if (!slides.length) return;
+    slides.forEach(function (slide) { slide.classList.remove('active'); });
+    dots.forEach(function (dot) { dot.classList.remove('active'); });
+
+    currentSlide = (index + slides.length) % slides.length;
+    slides[currentSlide].classList.add('active');
+    if (dots[currentSlide]) dots[currentSlide].classList.add('active');
   }
-  
-  dots.forEach(function(dot) {
-    dot.addEventListener('click', function() {
-      const index = parseInt(this.dataset.index, 10);
-      showSlide(index);
+
+  function startTestimonial() {
+    stopTestimonial();
+    if (reducedMotion() || slides.length < 2) return;
+    testimonialTimer = setInterval(function () {
+      showSlide(currentSlide + 1);
+    }, CONFIG.testimonialInterval);
+  }
+
+  function stopTestimonial() {
+    if (testimonialTimer) clearInterval(testimonialTimer);
+    testimonialTimer = null;
+  }
+
+  if (slides.length) {
+    dots.forEach(function (dot) {
+      dot.addEventListener('click', function () {
+        const index = parseInt(this.dataset.index, 10) || 0;
+        showSlide(index);
+        startTestimonial();
+      });
+      // Dukungan keyboard untuk dot
+      dot.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const index = parseInt(this.dataset.index, 10) || 0;
+          showSlide(index);
+          startTestimonial();
+        }
+      });
     });
-  });
-  
-  setInterval(function() {
-    const next = (currentSlide + 1) % slides.length;
-    showSlide(next);
-  }, 5000);
-  
-  // 6. GALERI – RENDER & LIGHTBOX (dengan dukungan kolase)
+
+    const sliderEl = document.getElementById('testimonialSlider');
+    if (sliderEl) {
+      sliderEl.addEventListener('mouseenter', stopTestimonial);
+      sliderEl.addEventListener('mouseleave', startTestimonial);
+      sliderEl.addEventListener('focusin', stopTestimonial);
+      sliderEl.addEventListener('focusout', startTestimonial);
+
+      // Swipe support
+      let touchStartX = 0;
+      sliderEl.addEventListener('touchstart', function (e) {
+        touchStartX = e.changedTouches[0].clientX;
+        stopTestimonial();
+      }, { passive: true });
+
+      sliderEl.addEventListener('touchend', function (e) {
+        const delta = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(delta) > 50) {
+          showSlide(currentSlide + (delta < 0 ? 1 : -1));
+        }
+        startTestimonial();
+      }, { passive: true });
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stopTestimonial();
+      else startTestimonial();
+    });
+
+    startTestimonial();
+  }
+
+  /* ----------------------------------------------------------------
+     7. GALERI — DATA
+     ---------------------------------------------------------------- */
   const galeriData = [
     // --- Proyek Residensial ---
     {
@@ -135,13 +337,13 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Proyek pembangunan cluster besar tipe 47 dan 39 di Bukit Freesia yang telah selesai.',
       tag: 'Residensial'
     },
-    
+
     // --- Desain (single image) ---
     {
       img: 'IMG-20260709-WA0111.jpg',
       fallback: 'IMG-20260709-WA0111.jpg',
-      title: 'Rumah Cream Dormitory.',
-      desc: 'Gambar desain 3D, rumah cream dormitory - Tanggerang.',
+      title: 'Rumah Cream Dormitory',
+      desc: 'Gambar desain 3D, rumah cream dormitory - Tangerang.',
       tag: 'Desain'
     },
     {
@@ -165,8 +367,8 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Gambar desain 3D, apartemen ketapang.',
       tag: 'Desain'
     },
-    
-    // --- KOLASE 1 (3 gambar) ---
+
+    // --- Kolase: Taman ---
     {
       isCollage: true,
       images: [
@@ -179,8 +381,8 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Desain outdoor menghadirkan lingkungan yang asri melalui perpaduan material kayu, pepohonan, dan elemen air.',
       tag: 'Desain Interior'
     },
-    
-    // --- KOLASE 2 (4 gambar - Mushola) ---
+
+    // --- Kolase: Mushola ---
     {
       isCollage: true,
       images: [
@@ -194,8 +396,8 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Mushola dengan desain interior yang estetik, nyaman, dan fungsional untuk tempat ibadah.',
       tag: 'Desain Interior'
     },
-    
-    // --- KOLASE 3 (2 gambar - Ruang Ganti) ---
+
+    // --- Kolase: Ruang Ganti ---
     {
       isCollage: true,
       images: [
@@ -208,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
       tag: 'Desain Interior'
     },
 
-    // --- KOLASE 4 (2 gambar - Tambahan Baru) ---
+    // --- Kolase: Ruang Kerja ---
     {
       isCollage: true,
       images: [
@@ -220,8 +422,8 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Ruang kerja ini mengusung konsep modern minimalis dengan dominasi warna netral seperti putih, abu-abu, hitam, dan aksen kayu terang.',
       tag: 'Desain Interior'
     },
-    
-    // --- KOLASE 5 (4 gambar - Cafetaria) ---
+
+    // --- Kolase: Cafetaria (1) ---
     {
       isCollage: true,
       images: [
@@ -235,8 +437,8 @@ document.addEventListener('DOMContentLoaded', function() {
       desc: 'Desain cafetaria ini mengombinasikan nuansa modern dengan sentuhan natural melalui penggunaan material kayu dan pencahayaan alami.',
       tag: 'Desain Interior'
     },
-    
-    // --- KOLASE 6 (4 gambar - Cafetaria) ---
+
+    // --- Kolase: Cafetaria (2) ---
     {
       isCollage: true,
       images: [
@@ -251,143 +453,296 @@ document.addEventListener('DOMContentLoaded', function() {
       tag: 'Desain Interior'
     }
   ];
-  
+
+  /* ----------------------------------------------------------------
+     8. GALERI — RENDER
+     ---------------------------------------------------------------- */
   const galeriGrid = document.getElementById('galeriGrid');
-  
+
   if (galeriGrid) {
     let html = '';
-    
-    galeriData.forEach(function(item) {
+
+    galeriData.forEach(function (item, cardIndex) {
+      const safeTitle = escapeHtml(item.title);
+      const safeDesc = escapeHtml(item.desc);
+      const safeTag = escapeHtml(item.tag);
+
       if (item.isCollage) {
-        // Tentukan class grid berdasarkan jumlah gambar
         let gridClass = 'collage-grid';
-        if (item.images.length === 4) {
-          gridClass += ' collage-grid-4';
-        } else if (item.images.length === 3) {
-          gridClass += ' collage-grid-3';
-        } else if (item.images.length === 2) {
-          gridClass += ' collage-grid-2';
-        }
-        
-        html += `
-          <div class="galeri-item collage-item"
-               data-img="${item.images[0]}"
-               data-fallback="${item.fallback}"
-               data-title="${item.title}"
-               data-desc="${item.desc}">
-            <div class="galeri-image ${gridClass}">
-              ${item.images.map(function(src) {
-                return `<img src="${src}" alt="${item.title}" loading="lazy" onerror="this.src='${item.fallback}'">`;
-              }).join('')}
-              <div class="galeri-overlay">
-                <i class="fas fa-search-plus"></i>
-              </div>
-            </div>
-            <div class="galeri-info">
-              <h4>${item.title}</h4>
-              <p>${item.desc}</p>
-              <span class="galeri-tag">${item.tag}</span>
-            </div>
-          </div>
-        `;
+        if (item.images.length >= 4) gridClass += ' collage-grid-4';
+        else if (item.images.length === 3) gridClass += ' collage-grid-3';
+        else if (item.images.length === 2) gridClass += ' collage-grid-2';
+
+        html +=
+          '<div class="galeri-item collage-item" data-card="' + cardIndex + '">' +
+            '<div class="galeri-image ' + gridClass + '">' +
+              item.images.map(function (src, i) {
+                return '<img src="' + src + '" ' +
+                       'alt="' + safeTitle + ' - foto ' + (i + 1) + '" ' +
+                       'loading="lazy" data-photo="' + i + '" ' +
+                       'onerror="this.onerror=null;this.src=\'' + item.fallback + '\'">';
+              }).join('') +
+              '<div class="galeri-overlay" aria-hidden="true">' +
+                '<i class="fas fa-search-plus"></i>' +
+              '</div>' +
+            '</div>' +
+            '<div class="galeri-info">' +
+              '<h4>' + safeTitle + '</h4>' +
+              '<p>' + safeDesc + '</p>' +
+              '<span class="galeri-tag">' + safeTag + '</span>' +
+            '</div>' +
+          '</div>';
       } else {
-        // Kartu biasa (satu gambar)
-        html += `
-          <div class="galeri-item"
-               data-img="${item.img}"
-               data-fallback="${item.fallback}"
-               data-title="${item.title}"
-               data-desc="${item.desc}">
-            <div class="galeri-image">
-              <img src="${item.img}"
-                   alt="${item.title}"
-                   loading="lazy"
-                   onerror="this.src='${item.fallback}'">
-              <div class="galeri-overlay">
-                <i class="fas fa-search-plus"></i>
-              </div>
-            </div>
-            <div class="galeri-info">
-              <h4>${item.title}</h4>
-              <p>${item.desc}</p>
-              <span class="galeri-tag">${item.tag}</span>
-            </div>
-          </div>
-        `;
+        html +=
+          '<div class="galeri-item" data-card="' + cardIndex + '">' +
+            '<div class="galeri-image">' +
+              '<img src="' + item.img + '" ' +
+                   'alt="' + safeTitle + '" ' +
+                   'loading="lazy" data-photo="0" ' +
+                   'onerror="this.onerror=null;this.src=\'' + item.fallback + '\'">' +
+              '<div class="galeri-overlay" aria-hidden="true">' +
+                '<i class="fas fa-search-plus"></i>' +
+              '</div>' +
+            '</div>' +
+            '<div class="galeri-info">' +
+              '<h4>' + safeTitle + '</h4>' +
+              '<p>' + safeDesc + '</p>' +
+              '<span class="galeri-tag">' + safeTag + '</span>' +
+            '</div>' +
+          '</div>';
       }
     });
-    
+
     galeriGrid.innerHTML = html;
-    
-    // ---- Lightbox ----
+
+    /* ----------------------------------------------------------------
+       9. LIGHTBOX
+       ---------------------------------------------------------------- */
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCaption = document.getElementById('lightboxCaption');
     const lightboxClose = document.getElementById('lightboxClose');
-    
-    document.querySelectorAll('.galeri-item').forEach(function(item) {
-      item.addEventListener('click', function() {
-        const imgSrc = this.dataset.img;
-        const fallbackSrc = this.dataset.fallback;
-        const title = this.dataset.title;
-        const desc = this.dataset.desc;
-        
-        lightboxImg.src = imgSrc;
-        lightboxImg.onerror = function() {
-          lightboxImg.src = fallbackSrc;
-        };
-        
-        lightboxCaption.innerHTML = '<strong>' + title + '</strong><br>' + desc;
-        lightbox.classList.add('active');
+
+    let lastFocused = null;
+
+    function openLightbox(src, fallback, title, desc) {
+      if (!lightbox || !lightboxImg) return;
+
+      lastFocused = document.activeElement;
+
+      lightboxImg.onerror = function () {
+        lightboxImg.onerror = null;
+        lightboxImg.src = fallback;
+      };
+      lightboxImg.src = src;
+      lightboxImg.alt = title || '';
+
+      if (lightboxCaption) {
+        lightboxCaption.innerHTML =
+          '<strong>' + escapeHtml(title) + '</strong>' +
+          (desc ? '<br>' + escapeHtml(desc) : '');
+      }
+
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      if (lightboxClose) lightboxClose.focus();
+    }
+
+    function closeLightbox() {
+      if (!lightbox) return;
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+      if (lightboxImg) lightboxImg.src = '';
+      if (lastFocused && typeof lastFocused.focus === 'function') {
+        lastFocused.focus();
+      }
+    }
+
+    // Klik hanya pada area gambar yang memicu lightbox
+    galeriGrid.querySelectorAll('.galeri-item').forEach(function (card) {
+      const imageWrap = card.querySelector('.galeri-image');
+      if (!imageWrap) return;
+      imageWrap.style.cursor = 'pointer';
+
+      imageWrap.addEventListener('click', function (e) {
+        const cardIndex = parseInt(card.dataset.card, 10) || 0;
+        const item = galeriData[cardIndex];
+        if (!item) return;
+
+        const clickedImg = e.target.closest('img');
+        const photoIndex = clickedImg
+          ? (parseInt(clickedImg.dataset.photo, 10) || 0)
+          : 0;
+
+        // Kolase → buka gambar yang benar-benar diklik
+        // Single image → buka item.img
+        const src = item.isCollage ? item.images[photoIndex] : item.img;
+
+        openLightbox(src, item.fallback, item.title, item.desc);
       });
     });
-    
-    lightboxClose.addEventListener('click', function() {
-      lightbox.classList.remove('active');
-    });
-    
-    lightbox.addEventListener('click', function(e) {
-      if (e.target === this) {
-        lightbox.classList.remove('active');
+
+    if (lightboxClose) {
+      lightboxClose.addEventListener('click', closeLightbox);
+    }
+    if (lightbox) {
+      lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox) closeLightbox();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) {
+        closeLightbox();
       }
     });
   }
-  
-  // 7. CONTACT FORM
+
+  /* ----------------------------------------------------------------
+     10. FORM KONTAK → WHATSAPP
+     
+     Alur:
+     1. User isi form → klik "Kirim Pesan"
+     2. Validasi HTML5
+     3. Data dirakit jadi pesan terformat
+     4. Buka wa.me dengan pesan terisi (tab baru)
+     5. Form direset + pesan sukses muncul
+     ---------------------------------------------------------------- */
   const kontakForm = document.getElementById('kontakForm');
-  
+
   if (kontakForm) {
-    kontakForm.addEventListener('submit', function(e) {
+    kontakForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      
-      const successMsg = document.getElementById('formSuccess');
-      successMsg.style.display = 'block';
-      
-      this.reset();
-      
-      setTimeout(function() {
-        successMsg.style.display = 'none';
-      }, 4000);
+
+      if (!kontakForm.checkValidity()) {
+        kontakForm.reportValidity();
+        return;
+      }
+
+      const data = {
+        nama: (document.getElementById('nama') || {}).value
+          ? document.getElementById('nama').value.trim() : '',
+        email: (document.getElementById('email') || {}).value
+          ? document.getElementById('email').value.trim() : '',
+        subjek: (document.getElementById('subjek') || {}).value
+          ? document.getElementById('subjek').value.trim() : '',
+        pesan: (document.getElementById('pesan') || {}).value
+          ? document.getElementById('pesan').value.trim() : ''
+      };
+
+      // Rakit pesan WhatsApp
+      const waMessage =
+        'Halo ' + CONFIG.companyName + ',\n\n' +
+        'Saya ingin menghubungi Anda melalui website.\n\n' +
+        '*Nama:* ' + data.nama + '\n' +
+        '*Email:* ' + data.email + '\n' +
+        '*Subjek:* ' + data.subjek + '\n\n' +
+        '*Pesan:*\n' + data.pesan + '\n\n' +
+        'Terima kasih.';
+
+      // UI feedback: tombol loading
+      const btn = kontakForm.querySelector('button[type="submit"]');
+      const originalHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = 'Membuka WhatsApp... <i class="fas fa-spinner fa-spin"></i>';
+      }
+
+      // Delay kecil supaya UI loading state terlihat
+      setTimeout(function () {
+        openWhatsApp(waMessage);
+
+        // Reset form + tampilkan pesan sukses
+        kontakForm.reset();
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+        }
+
+        const successMsg = document.getElementById('formSuccess');
+        if (successMsg) {
+          successMsg.textContent =
+            'Terima kasih! WhatsApp akan terbuka dengan pesan Anda. ' +
+            'Jika tidak terbuka otomatis, silakan hubungi kami langsung di 0815-7860-2901.';
+          successMsg.style.display = 'block';
+          setTimeout(function () {
+            successMsg.style.display = 'none';
+          }, 8000);
+        }
+      }, 400);
     });
   }
-  
-  // 8. NEWSLETTER FORM
+
+  /* ----------------------------------------------------------------
+     11. KONSULTASI GRATIS (footer) → WHATSAPP
+     
+     Alur:
+     1. User isi email di footer → klik tombol kirim
+     2. Email divalidasi
+     3. Buka WhatsApp dengan pesan terisi
+     4. Beri feedback visual di placeholder input
+     ---------------------------------------------------------------- */
   const newsletterForm = document.getElementById('newsletterForm');
-  
+
   if (newsletterForm) {
-    newsletterForm.addEventListener('submit', function(e) {
+    const newsletterInput = newsletterForm.querySelector('input[type="email"]');
+    const defaultPlaceholder = newsletterInput
+      ? newsletterInput.getAttribute('placeholder') || 'Email Anda'
+      : 'Email Anda';
+
+    newsletterForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      alert('Terima kasih telah berlangganan newsletter kami!');
-      this.reset();
+      if (!newsletterInput) return;
+
+      const email = newsletterInput.value.trim();
+      if (!email) {
+        newsletterInput.focus();
+        return;
+      }
+
+      // Rakit pesan konsultasi
+      const waMessage =
+        'Halo ' + CONFIG.companyName + ',\n\n' +
+        'Saya ingin minta *konsultasi gratis* untuk proyek saya.\n\n' +
+        '*Email saya:* ' + email + '\n\n' +
+        'Mohon dihubungi kembali. Terima kasih.';
+
+      // UI feedback: tombol loading
+      const btn = newsletterForm.querySelector('button[type="submit"]');
+      const originalHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      }
+
+      // Buka WhatsApp di tab baru
+      setTimeout(function () {
+        openWhatsApp(waMessage);
+
+        // Reset + feedback
+        newsletterInput.value = '';
+        newsletterInput.placeholder = 'Terima kasih! WhatsApp akan terbuka...';
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+        }
+
+        setTimeout(function () {
+          newsletterInput.placeholder = defaultPlaceholder;
+        }, 4500);
+      }, 300);
     });
   }
-  
-  // 9. BACK TO TOP
-  backToTop.addEventListener('click', function() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+
+  /* ----------------------------------------------------------------
+     12. BACK TO TOP
+     ---------------------------------------------------------------- */
+  if (backToTop) {
+    backToTop.addEventListener('click', function () {
+      window.scrollTo({
+        top: 0,
+        behavior: reducedMotion() ? 'auto' : 'smooth'
+      });
     });
-  });
-  
+  }
+
 });

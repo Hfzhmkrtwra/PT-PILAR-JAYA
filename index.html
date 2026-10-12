@@ -4,20 +4,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PT Pilar Jaya Kontruksi — perusahaan konstruksi terpercaya di bidang konstruksi umum, pekerjaan sipil, sumber daya air, desain interior, dan penyedia tenaga kerja bersertifikat." />
+  <meta name="theme-color" content="#1a3a5c" />
   <title>PT Pilar Jaya Kontruksi - Mitra Konstruksi Terpercaya</title>
-  
+
   <!-- Font Awesome (untuk ikon) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
+
   <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  
+
   <!-- CSS Utama -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  
+
   <!-- ===== PRELOADER ===== -->
   <div class="preloader" id="preloader">
     <div class="loader">
@@ -25,12 +29,12 @@
       <p>PT PILAR JAYA KONTRUKSI</p>
     </div>
   </div>
-  
+
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="#beranda" class="nav-logo">
-        <img src="logo.jpg" alt="PILAR JAYA KONTRUKSI" />
+        <img src="logo.jpg" alt="PT Pilar Jaya Kontruksi" />
         <span class="nav-logo-text">PILAR JAYA KONTRUKSI</span>
       </a>
       <ul class="nav-menu" id="navMenu">
@@ -41,18 +45,18 @@
         <li><a href="#galeri" class="nav-link">Galeri Proyek</a></li>
         <li><a href="#kontak" class="nav-link">Kontak</a></li>
       </ul>
-      <div class="hamburger" id="hamburger">
+      <button class="hamburger" id="hamburger" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="navMenu">
         <span></span><span></span><span></span>
-      </div>
+      </button>
     </div>
   </nav>
-  
+
   <!-- ===== HERO ===== -->
   <section class="hero" id="beranda">
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <div class="hero-logo-img">
-        <img src="logo.jpg" alt="PILAR JAYA KONTRUKSI" />
+        <img src="logo.jpg" alt="PT Pilar Jaya Kontruksi" />
       </div>
       <h1 class="hero-title">PT PILAR JAYA KONTRUKSI</h1>
       <p class="hero-subtitle">Membangun Fondasi Kokoh untuk Masa Depan Indonesia</p>
@@ -79,7 +83,7 @@
           <span class="stat-label">Tahun Pengalaman</span>
         </div>
         <div class="stat-item">
-          <span class="stat-number" data-target="8">0</span>
+          <span class="stat-number" data-target="7">0</span>
           <span class="stat-plus">+</span>
           <span class="stat-label">Klien &amp; Mitra</span>
         </div>
@@ -94,7 +98,7 @@
       <i class="fas fa-chevron-down"></i>
     </div>
   </section>
-  
+
   <!-- ===== TENTANG ===== -->
   <section class="tentang" id="tentang">
     <div class="section-container">
@@ -106,7 +110,7 @@
       <div class="tentang-content">
         <div class="tentang-image">
           <div class="image-frame">
-            <img src="IMG-20260709-WA0069.jpg" alt="Proyek Konstruksi" loading="lazy" onerror="this.src='IMG-20260709-WA0069.jpg'" />
+            <img src="IMG-20260709-WA0069.jpg" alt="Proyek Konstruksi Pilar Jaya" loading="lazy" />
           </div>
           <div class="image-badge">
             <span>2024</span>
@@ -131,7 +135,7 @@
       </div>
     </div>
   </section>
-  
+
   <!-- ===== SEJARAH ===== -->
   <section class="sejarah" id="sejarah">
     <div class="section-container">
@@ -156,13 +160,13 @@
           <div class="timeline-card">
             <span class="timeline-year">2024 – 2026</span>
             <h4>Proyek Awal &amp; Mitra Strategis</h4>
-            <p>Mengawali langkah dengan mengerjakan proyek perumahan di Citra Indah City, Jonggol (Cluster Bukit Permai, Bukit Freesia, dan Matoa). Bekerja sama dengan mitra besar seperti Ciputra, Mega Baja, Wika, dan Badan Gizi Nasional.</p>
+            <p>Mengawali langkah dengan mengerjakan proyek perumahan di Citra Indah City, Jonggol (Cluster Bukit Permai, Bukit Freesia, dan Matoa). Bekerja sama dengan mitra besar seperti Ciputra, Mega Baja, dan Wika.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
-  
+
   <!-- ===== LAYANAN ===== -->
   <section class="layanan" id="layanan">
     <div class="section-container">
@@ -205,7 +209,7 @@
       </div>
     </div>
   </section>
-  
+
   <!-- ===== GALERI ===== -->
   <section class="galeri" id="galeri">
     <div class="section-container">
@@ -218,7 +222,7 @@
       <div class="galeri-grid" id="galeriGrid"></div>
     </div>
   </section>
-  
+
   <!-- ===== KLIEN & MITRA ===== -->
   <section class="klien" id="klien">
     <div class="section-container">
@@ -234,12 +238,11 @@
         <div class="klien-item"><i class="fas fa-toilet"></i> <br /> Sandimas</div>
         <div class="klien-item"><i class="fas fa-dragon"></i> <br /> Wika</div>
         <div class="klien-item"><i class="fas fa-handshake"></i> <br /> PSS</div>
-        <div class="klien-item"><i class="fas fa-utensils"></i> <br /> Badan Gizi Nasional</div>
         <div class="klien-item"><i class="fas fa-hard-hat"></i> <br /> Karya Inti Bangsa</div>
       </div>
     </div>
   </section>
-  
+
   <!-- ===== TESTIMONIAL ===== -->
   <section class="testimonial-brief">
     <div class="section-container">
@@ -261,13 +264,13 @@
         </div>
       </div>
       <div class="testimonial-dots" id="testimonialDots">
-        <span class="dot active" data-index="0"></span>
-        <span class="dot" data-index="1"></span>
-        <span class="dot" data-index="2"></span>
+        <span class="dot active" data-index="0" role="button" tabindex="0" aria-label="Testimoni 1"></span>
+        <span class="dot" data-index="1" role="button" tabindex="0" aria-label="Testimoni 2"></span>
+        <span class="dot" data-index="2" role="button" tabindex="0" aria-label="Testimoni 3"></span>
       </div>
     </div>
   </section>
-  
+
   <!-- ===== KONTAK ===== -->
   <section class="kontak" id="kontak">
     <div class="section-container">
@@ -297,14 +300,14 @@
             <i class="fas fa-phone-alt"></i>
             <div>
               <h4>Telepon / WhatsApp</h4>
-              <p>0815-7860-2901</p>
+              <p><a href="https://wa.me/6281578602901" target="_blank" rel="noopener noreferrer">0815-7860-2901</a></p>
             </div>
           </div>
           <div class="kontak-card">
             <i class="fas fa-envelope"></i>
             <div>
               <h4>Email</h4>
-              <p>pilarjayakontruksi@gmail.com</p>
+              <p><a href="mailto:pilarjayakontruksi@gmail.com">pilarjayakontruksi@gmail.com</a></p>
             </div>
           </div>
           <div class="kontak-card">
@@ -315,20 +318,20 @@
             </div>
           </div>
         </div>
-        
-        <form class="kontak-form" id="kontakForm">
+
+        <form class="kontak-form" id="kontakForm" novalidate>
           <h3>Kirim Pesan</h3>
           <div class="form-group">
-            <input type="text" id="nama" placeholder="Nama Lengkap" required />
+            <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" required autocomplete="name" />
           </div>
           <div class="form-group">
-            <input type="email" id="email" placeholder="Alamat Email" required />
+            <input type="email" id="email" name="email" placeholder="Alamat Email" required autocomplete="email" />
           </div>
           <div class="form-group">
-            <input type="text" id="subjek" placeholder="Subjek Pesan" required />
+            <input type="text" id="subjek" name="subjek" placeholder="Subjek Pesan" required />
           </div>
           <div class="form-group">
-            <textarea id="pesan" rows="5" placeholder="Tulis pesan Anda di sini..." required></textarea>
+            <textarea id="pesan" name="pesan" rows="5" placeholder="Tulis pesan Anda di sini..." required></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-block">
             Kirim Pesan <i class="fas fa-paper-plane"></i>
@@ -338,14 +341,14 @@
       </div>
     </div>
   </section>
-  
+
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-grid">
         <div class="footer-about">
           <div class="footer-logo">
-            <img src="logo.jpg" alt="PILAR JAYA KONTRUKSI" />
+            <img src="logo.jpg" alt="PT Pilar Jaya Kontruksi" />
           </div>
           <p>Mitra konstruksi terpercaya yang berkomitmen membangun fondasi kokoh untuk masa depan Indonesia.</p>
           <div class="footer-social">
@@ -354,7 +357,7 @@
             <a href="https://wa.me/6281578602901" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
           </div>
         </div>
-        
+
         <div class="footer-links">
           <h4>Navigasi</h4>
           <ul>
@@ -366,7 +369,7 @@
             <li><a href="#kontak">Kontak</a></li>
           </ul>
         </div>
-        
+
         <div class="footer-links">
           <h4>Layanan</h4>
           <ul>
@@ -378,38 +381,47 @@
             <li><a href="#layanan">Tenaga Kerja Bersertifikat</a></li>
           </ul>
         </div>
-        
+
         <div class="footer-newsletter">
-          <h4>Newsletter</h4>
-          <p>Berlangganan untuk mendapatkan update proyek dan berita terbaru dari kami.</p>
+          <h4>Konsultasi Gratis</h4>
+          <p>Butuh estimasi biaya proyek? Tinggalkan email Anda, tim kami akan menghubungi Anda dalam 1×24 jam.</p>
           <form class="newsletter-form" id="newsletterForm">
-            <input type="email" placeholder="Email Anda" required />
-            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+            <input type="email" placeholder="Email Anda" required aria-label="Email untuk konsultasi" />
+            <button type="submit" aria-label="Minta konsultasi"><i class="fas fa-paper-plane"></i></button>
           </form>
         </div>
       </div>
-      
+
       <div class="footer-bottom">
         <p>&copy; 2024 PT PILAR JAYA KONTRUKSI. Seluruh hak cipta dilindungi undang-undang.</p>
       </div>
     </div>
   </footer>
-  
+
+  <!-- ===== FLOATING WHATSAPP ===== -->
+  <a href="https://wa.me/6281578602901?text=Halo%20PT%20Pilar%20Jaya%20Kontruksi%2C%20saya%20ingin%20bertanya%20mengenai%20layanan%20konstruksi."
+     class="whatsapp-float"
+     target="_blank"
+     rel="noopener noreferrer"
+     aria-label="Hubungi kami via WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
   <!-- ===== BACK TO TOP ===== -->
   <button class="back-to-top" id="backToTop" aria-label="Kembali ke atas">
     <i class="fas fa-arrow-up"></i>
   </button>
-  
+
   <!-- ===== LIGHTBOX ===== -->
-  <div class="lightbox" id="lightbox">
-    <span class="lightbox-close" id="lightboxClose">&times;</span>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Pratinjau gambar">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Tutup pratinjau">&times;</button>
     <img src="" alt="" id="lightboxImg" />
     <div class="lightbox-caption" id="lightboxCaption"></div>
   </div>
-  
+
   <!-- ===== JAVASCRIPT ===== -->
   <script src="main.js"></script>
-  
+
 </body>
 
 </html>

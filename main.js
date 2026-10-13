@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return !!win;
   }
 
-  // Init Firebase sekarang (setelah semua helper siap)
+  // Init Firebase
   initFirebase();
 
   // ---------- Preloader ----------
@@ -523,9 +523,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }).join('');
   }
 
-  // ---------- Fetch konten dari Firestore + fallback ----------
+  // ---------- Fetch konten dari Firestore (real-time) + fallback ----------
   function loadDynamicContent() {
-    // Kalau Firestore tidak tersedia, pakai fallback
     if (!firebaseApp || !firebase.firestore) {
       console.warn('[Firestore] Tidak tersedia — pakai data fallback.');
       renderGaleri(FALLBACK.galeri);
@@ -536,38 +535,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const db = firebase.firestore();
 
-    db.collection('galeri').get()
-      .then(function (snap) {
+    db.collection('galeri').onSnapshot(
+      function (snap) {
         const arr = [];
         snap.forEach(function (d) { arr.push(d.data()); });
         renderGaleri(arr.length ? arr : FALLBACK.galeri);
-      })
-      .catch(function (err) {
+      },
+      function (err) {
         console.warn('[Firestore] galeri gagal:', err);
         renderGaleri(FALLBACK.galeri);
-      });
+      }
+    );
 
-    db.collection('testimonial').get()
-      .then(function (snap) {
+    db.collection('testimonial').onSnapshot(
+      function (snap) {
         const arr = [];
         snap.forEach(function (d) { arr.push(d.data()); });
         renderTestimonial(arr.length ? arr : FALLBACK.testimonial);
-      })
-      .catch(function (err) {
+      },
+      function (err) {
         console.warn('[Firestore] testimonial gagal:', err);
         renderTestimonial(FALLBACK.testimonial);
-      });
+      }
+    );
 
-    db.collection('klien').get()
-      .then(function (snap) {
+    db.collection('klien').onSnapshot(
+      function (snap) {
         const arr = [];
         snap.forEach(function (d) { arr.push(d.data()); });
         renderKlien(arr.length ? arr : FALLBACK.klien);
-      })
-      .catch(function (err) {
+      },
+      function (err) {
         console.warn('[Firestore] klien gagal:', err);
         renderKlien(FALLBACK.klien);
-      });
+      }
+    );
   }
 
   loadDynamicContent();

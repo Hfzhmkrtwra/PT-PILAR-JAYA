@@ -13,35 +13,41 @@
 
 <body>
 
-  <!-- Login -->
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
       <div class="login-icon"><i class="fas fa-hard-hat"></i></div>
       <h1>Admin Panel</h1>
       <p>PT Pilar Jaya Kontruksi</p>
+
       <form id="loginForm">
         <div class="form-group">
           <label for="loginEmail">Email</label>
           <input type="email" id="loginEmail" required autocomplete="email" placeholder="admin@email.com" />
         </div>
+
         <div class="form-group">
           <label for="loginPassword">Password</label>
-          <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••" />
+          <div class="password-wrapper">
+            <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••" />
+            <button type="button" class="toggle-password" id="togglePassword" aria-label="Tampilkan password">
+              <i class="fas fa-eye" id="togglePasswordIcon"></i>
+            </button>
+          </div>
         </div>
+
         <button type="submit" class="btn btn-login" id="loginBtn">
           Masuk <i class="fas fa-sign-in-alt"></i>
         </button>
         <p class="login-error" id="loginError" aria-live="polite"></p>
       </form>
+
       <a href="index.html" class="back-link">
         <i class="fas fa-arrow-left"></i> Kembali ke website
       </a>
     </div>
   </div>
 
-  <!-- Dashboard -->
   <div class="dashboard hidden" id="dashboard">
-
     <header class="admin-header">
       <div class="admin-header-left">
         <i class="fas fa-hard-hat"></i>
@@ -78,7 +84,6 @@
 
     <main class="admin-main">
 
-      <!-- Galeri -->
       <section class="tab-content active" id="tab-galeri">
         <div class="tab-header">
           <div>
@@ -96,7 +101,6 @@
         </div>
       </section>
 
-      <!-- Testimoni -->
       <section class="tab-content" id="tab-testimonial">
         <div class="tab-header">
           <div>
@@ -114,7 +118,6 @@
         </div>
       </section>
 
-      <!-- Klien -->
       <section class="tab-content" id="tab-klien">
         <div class="tab-header">
           <div>
@@ -132,7 +135,6 @@
         </div>
       </section>
 
-      <!-- Pesan Masuk -->
       <section class="tab-content" id="tab-pesan">
         <div class="tab-header">
           <div>
@@ -150,7 +152,6 @@
     </main>
   </div>
 
-  <!-- Modal Form -->
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content">
       <div class="modal-header">
@@ -167,15 +168,12 @@
     </div>
   </div>
 
-  <!-- Toast -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-  <!-- Admin JS -->
   <script src="admin.js"></script>
 
 </body>

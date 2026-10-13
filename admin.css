@@ -102,6 +102,22 @@ body {
   min-height: 90px;
 }
 
+/* Input error state */
+.form-group input.error,
+.form-group textarea.error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(4px); }
+}
+
 .help-text {
   font-size: .78rem;
   color: var(--text-light);
@@ -155,6 +171,16 @@ body {
   color: var(--danger);
   font-size: .85rem;
   min-height: 1.2em;
+  font-weight: 500;
+}
+
+.login-error:not(:empty) {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .back-link {
@@ -513,22 +539,32 @@ body {
   border-top: 1px solid var(--border);
 }
 
-/* Toast */
+/* Toast dengan ikon */
 .toast {
   position: fixed;
   bottom: 20px;
   left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  padding: .8rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  max-width: calc(100vw - 40px);
+  padding: .9rem 1.4rem;
+  font-size: .9rem;
+  font-weight: 500;
   color: var(--white);
   background: var(--primary-dark);
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0,0,0,.3);
-  font-size: .9rem;
   opacity: 0;
-  transition: all .3s;
   z-index: 2000;
   pointer-events: none;
+  transform: translateX(-50%) translateY(100px);
+  transition: all .3s;
+}
+
+.toast i {
+  font-size: 1.2rem;
+  flex-shrink: 0;
 }
 
 .toast.show {
@@ -537,7 +573,8 @@ body {
 }
 
 .toast.success { background: var(--success); }
-.toast.error { background: var(--danger); }
+.toast.error   { background: var(--danger); }
+.toast.info    { background: var(--primary); }
 
 /* Responsive */
 @media (max-width: 600px) {

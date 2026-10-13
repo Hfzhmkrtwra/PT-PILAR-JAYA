@@ -1,5 +1,5 @@
 /* Admin Dashboard — PT Pilar Jaya Kontruksi
-   Fitur: Login, CRUD Real-Time, Import Data Contoh
+   Fitur: Login, CRUD Real-Time, Import Data Contoh, Validasi Notifikasi
 */
 (function () {
 
@@ -23,6 +23,8 @@
   const loginForm = document.getElementById('loginForm');
   const loginError = document.getElementById('loginError');
   const loginBtn = document.getElementById('loginBtn');
+  const loginEmailInput = document.getElementById('loginEmail');
+  const loginPasswordInput = document.getElementById('loginPassword');
   const adminEmail = document.getElementById('adminEmail');
   const logoutBtn = document.getElementById('logoutBtn');
   const modal = document.getElementById('modal');
@@ -145,11 +147,27 @@
     }
   };
 
-  // ---------- Toast ----------
+  // ---------- Toast dengan Ikon ----------
   function showToast(msg, type) {
-    toast.textContent = msg;
-    toast.className = 'toast ' + (type || '') + ' show';
-    setTimeout(function () { toast.classList.remove('show'); }, 3000);
+    var icons = {
+      success: 'fa-check-circle',
+      error:   'fa-times-circle',
+      info:    'fa-info-circle'
+    };
+    var icon = icons[type] || icons.info;
+    toast.innerHTML = '<i class="fas ' + icon + '"></i><span>' + msg + '</span>';
+    toast.className = 'toast ' + (type || 'info') + ' show';
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(function () {
+      toast.classList.remove('show');
+    }, 3500);
+  }
+
+  // ---------- Error Visual pada Input ----------
+  function markInputError(input) {
+    if (!input) return;
+    input.classList.add('error');
+    setTimeout(function () { input.classList.remove('error'); }, 1500);
   }
 
   // ---------- Toggle Password Visibility ----------
@@ -192,21 +210,40 @@
   // ---------- Login ----------
   loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value.trim();
-    const pass = document.getElementById('loginPassword').value;
+    const email = loginEmailInput.value.trim();
+    const pass = loginPasswordInput.value;
 
     loginBtn.disabled = true;
     loginBtn.innerHTML = 'Memproses... <i class="fas fa-spinner fa-spin"></i>';
     loginError.textContent = '';
 
+    // Reset error state sebelumnya
+    loginEmailInput.classList.remove('error');
+    loginPasswordInput.classList.remove('error');
+
     auth.signInWithEmailAndPassword(email, pass)
       .then(function () {
         loginForm.reset();
         resetPasswordToggle();
+        showToast('Login berhasil. Selamat datang!', 'success');
       })
       .catch(function (err) {
         console.error('[Login] Error code:', err.code, err.message);
-        loginError.textContent = translateAuthError(err);
+        const msg = translateAuthError(err);
+        loginError.textContent = msg;
+
+        // Tandai input yang salah + animasi shake
+        if (err.code === 'auth/wrong-password' ||
+            err.code === 'auth/invalid-credential') {
+          markInputError(loginEmailInput);
+          markInputError(loginPasswordInput);
+        } else if (err.code === 'auth/user-not-found' ||
+                   err.code === 'auth/invalid-email') {
+          markInputError(loginEmailInput);
+        }
+
+        // Notifikasi toast merah
+        showToast(msg, 'error');
       })
       .finally(function () {
         loginBtn.disabled = false;
@@ -447,8 +484,12 @@
       const collection = col === 'pesan' ? 'pilarjayakontruksi' : col;
 
       db.collection(collection).doc(id).delete()
-        .then(function () { showToast('Berhasil dihapus.', 'success'); })
-        .catch(function (err) { showToast('Gagal hapus: ' + err.message, 'error'); });
+        .then(function () {
+          showToast('Data berhasil dihapus.', 'success');
+        })
+        .catch(function (err) {
+          showToast('Gagal menghapus: ' + err.message, 'error');
+        });
       return;
     }
 
@@ -462,7 +503,7 @@
       importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengimport...';
 
       importSeedData(col, function (n) {
-        showToast(n + ' data berhasil diimport.', 'success');
+        showToast(n + ' data contoh berhasil diimport.', 'success');
       });
     }
   });
@@ -529,11 +570,13 @@
       data[f.name] = v;
     });
 
+    const isEdit = !!currentEdit.id;
+
     modalSave.disabled = true;
     modalSave.innerHTML = 'Menyimpan... <i class="fas fa-spinner fa-spin"></i>';
 
     let op;
-    if (currentEdit.id) {
+    if (isEdit) {
       op = db.collection(collection).doc(currentEdit.id).update(data);
     } else {
       data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
@@ -541,11 +584,11 @@
     }
 
     op.then(function () {
-      showToast('Berhasil disimpan.', 'success');
+      showToast(isEdit ? 'Data berhasil diperbarui.' : 'Data berhasil ditambahkan.', 'success');
       closeModal();
     })
     .catch(function (err) {
-      showToast('Gagal: ' + err.message, 'error');
+      showToast('Gagal menyimpan: ' + err.message, 'error');
     })
     .finally(function () {
       modalSave.disabled = false;

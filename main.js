@@ -1,41 +1,85 @@
-/* ================================================================
-   PT PILAR JAYA KONTRUKSI — main.js (FINAL)
-   
-   Fitur:
-   - Preloader dengan timeout pengaman
-   - Navbar scroll effect + scroll-spy
-   - Mobile menu (klik luar, escape)
-   - Stat counter dengan easing
-   - Testimonial slider (auto-pause, swipe)
-   - Galeri: single + kolase, lightbox per-gambar
-   - Lightbox: escape, backdrop, focus return, body lock
-   - Form kontak → WhatsApp (pesan terisi otomatis)
-   - Konsultasi gratis (footer) → WhatsApp
-   - Back to top
-   - Menghormati prefers-reduced-motion
-   
-   Konfigurasi nomor WA ada di CONFIG di bawah.
-   ================================================================ */
+/* PT PILAR JAYA KONTRUKSI — main.js (FINAL)
+   Firebase + WhatsApp + Galeri + Lightbox + Form
+   Collection Firestore: pilarjayakontruksi
+*/
 document.addEventListener('DOMContentLoaded', function () {
 
-  /* ----------------------------------------------------------------
-     KONFIGURASI
-     Ganti nilai di sini jika nomor / pesan template berubah.
-     ---------------------------------------------------------------- */
+  // Konfigurasi
   const CONFIG = {
-    // Nomor WhatsApp tujuan (format internasional, tanpa '+' dan tanpa '0' depan)
     waNumber: '6281578602901',
-    // Nama perusahaan untuk template pesan
     companyName: 'PT Pilar Jaya Kontruksi',
-    // Interval testimonial (ms)
     testimonialInterval: 5500,
-    // Threshold scroll untuk tombol back-to-top
     backToTopThreshold: 600
   };
 
-  /* ----------------------------------------------------------------
-     UTILITAS
-     ---------------------------------------------------------------- */
+  // Firebase config
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyBmQ9dNilq-61Goj-BvgvzBtOxgtACohhA",
+    authDomain: "pilar-jaya-kontruksi-35d69.firebaseapp.com",
+    projectId: "pilar-jaya-kontruksi-35d69",
+    storageBucket: "pilar-jaya-kontruksi-35d69.firebasestorage.app",
+    messagingSenderId: "995786907146",
+    appId: "1:995786907146:web:3eacd77b81fb507c3fc9f3",
+    measurementId: "G-8HM1M9KVC4"
+  };
+
+  // Nama collection Firestore (satu collection untuk semua submission)
+  const FIRESTORE_COLLECTION = 'pilarjayakontruksi';
+
+  let firebaseApp = null;
+  let firebaseAnalytics = null;
+
+  // Init Firebase
+  function initFirebase() {
+    if (typeof firebase === 'undefined') {
+      console.warn('[Firebase] SDK belum dimuat.');
+      return null;
+    }
+    if (firebaseApp) return firebaseApp;
+    try {
+      firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+      if (typeof firebase.analytics === 'function') {
+        firebaseAnalytics = firebase.analytics();
+      }
+      console.log('[Firebase] Siap.');
+    } catch (err) {
+      console.error('[Firebase] Init gagal:', err);
+    }
+    return firebaseApp;
+  }
+
+  // Simpan ke Firestore (selalu ke collection 'pilarjayakontruksi')
+  function logToFirestore(data) {
+    if (!firebaseApp) return Promise.resolve(false);
+    if (!firebase.firestore) {
+      console.warn('[Firestore] Library belum dimuat.');
+      return Promise.resolve(false);
+    }
+    return firebase.firestore()
+      .collection(FIRESTORE_COLLECTION)
+      .add(Object.assign({}, data, {
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        userAgent: navigator.userAgent,
+        pageUrl: location.href
+      }))
+      .then(function () { return true; })
+      .catch(function (err) {
+        console.error('[Firestore] Gagal menyimpan:', err);
+        return false;
+      });
+  }
+
+  // Kirim event Analytics
+  function trackEvent(name, params) {
+    if (!firebaseAnalytics || !firebase.analytics) return;
+    try {
+      firebase.analytics().logEvent(name, params || {});
+    } catch (err) {}
+  }
+
+  initFirebase();
+
+  // Utilitas
   function reducedMotion() {
     return window.matchMedia &&
            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -54,14 +98,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const url = 'https://wa.me/' + CONFIG.waNumber +
                 '?text=' + encodeURIComponent(message);
     const win = window.open(url, '_blank', 'noopener,noreferrer');
-    // Fallback: popup diblokir → redirect di tab yang sama
     if (!win) window.location.href = url;
     return !!win;
   }
 
-  /* ----------------------------------------------------------------
-     1. PRELOADER (dengan timeout pengaman)
-     ---------------------------------------------------------------- */
+  // Preloader
   const preloader = document.getElementById('preloader');
 
   function hidePreloader() {
@@ -79,12 +120,9 @@ document.addEventListener('DOMContentLoaded', function () {
       setTimeout(hidePreloader, 400);
     });
   }
-  // Pengaman: preloader hilang setelah 4 detik
   setTimeout(hidePreloader, 4000);
 
-  /* ----------------------------------------------------------------
-     2. NAVBAR SCROLL EFFECT & BACK TO TOP
-     ---------------------------------------------------------------- */
+  // Navbar scroll & back to top
   const navbar = document.getElementById('navbar');
   const backToTop = document.getElementById('backToTop');
 
@@ -99,9 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  /* ----------------------------------------------------------------
-     3. MOBILE MENU
-     ---------------------------------------------------------------- */
+  // Mobile menu
   const hamburger = document.getElementById('hamburger');
   const navMenu = document.getElementById('navMenu');
 
@@ -124,14 +160,12 @@ document.addEventListener('DOMContentLoaded', function () {
       link.addEventListener('click', closeMobileMenu);
     });
 
-    // Tutup menu saat klik di luar
     document.addEventListener('click', function (e) {
       if (!navMenu.classList.contains('active')) return;
       if (navMenu.contains(e.target) || hamburger.contains(e.target)) return;
       closeMobileMenu();
     });
 
-    // Tutup dengan Escape
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && navMenu.classList.contains('active')) {
         closeMobileMenu();
@@ -139,9 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ----------------------------------------------------------------
-     4. SCROLL-SPY untuk .nav-link.active
-     ---------------------------------------------------------------- */
+  // Scroll-spy
   const navLinks = document.querySelectorAll('.nav-link');
   const navSections = Array.prototype.slice
     .call(navLinks)
@@ -170,9 +202,7 @@ document.addEventListener('DOMContentLoaded', function () {
     navSections.forEach(function (sec) { spy.observe(sec); });
   }
 
-  /* ----------------------------------------------------------------
-     5. STAT COUNTER
-     ---------------------------------------------------------------- */
+  // Stat counter
   const statNumbers = document.querySelectorAll('.stat-number[data-target]');
 
   function runCounter(el) {
@@ -191,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function tick(now) {
       const p = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      const eased = 1 - Math.pow(1 - p, 3);
       el.textContent = Math.round(eased * target);
       if (p < 1) requestAnimationFrame(tick);
       else el.textContent = target;
@@ -217,9 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ----------------------------------------------------------------
-     6. TESTIMONIAL SLIDER
-     ---------------------------------------------------------------- */
+  // Testimonial slider
   const slides = document.querySelectorAll('.testimonial-slide');
   const dots = document.querySelectorAll('.testimonial-dots .dot');
   let currentSlide = 0;
@@ -255,7 +283,6 @@ document.addEventListener('DOMContentLoaded', function () {
         showSlide(index);
         startTestimonial();
       });
-      // Dukungan keyboard untuk dot
       dot.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -273,7 +300,6 @@ document.addEventListener('DOMContentLoaded', function () {
       sliderEl.addEventListener('focusin', stopTestimonial);
       sliderEl.addEventListener('focusout', startTestimonial);
 
-      // Swipe support
       let touchStartX = 0;
       sliderEl.addEventListener('touchstart', function (e) {
         touchStartX = e.changedTouches[0].clientX;
@@ -297,166 +323,83 @@ document.addEventListener('DOMContentLoaded', function () {
     startTestimonial();
   }
 
-  /* ----------------------------------------------------------------
-     7. GALERI — DATA
-     ---------------------------------------------------------------- */
+  // Data galeri
   const galeriData = [
-    // --- Proyek Residensial ---
-    {
-      img: 'IMG-20260709-WA0028.jpg',
-      fallback: 'IMG-20260709-WA0028.jpg',
+    { img: 'IMG-20260709-WA0028.jpg', fallback: 'IMG-20260709-WA0028.jpg',
       title: 'Bukit Permai Extension Tipe 66',
       desc: 'Proyek extension rumah tipe 66 di Cluster Bukit Permai, Citra Indah City, Jonggol.',
-      tag: 'Residensial'
-    },
-    {
-      img: 'IMG-20260709-WA0058.jpg',
-      fallback: 'IMG-20260709-WA0058.jpg',
+      tag: 'Residensial' },
+    { img: 'IMG-20260709-WA0058.jpg', fallback: 'IMG-20260709-WA0058.jpg',
       title: 'Matoa Tipe 22',
       desc: 'Pembangunan unit rumah tipe 22 di Cluster Matoa, Citra Indah City, Jonggol.',
-      tag: 'Residensial'
-    },
-    {
-      img: 'IMG-20260709-WA0013.jpg',
-      fallback: 'IMG-20260709-WA0013.jpg',
+      tag: 'Residensial' },
+    { img: 'IMG-20260709-WA0013.jpg', fallback: 'IMG-20260709-WA0013.jpg',
       title: 'Bukit Freesia Tipe 36',
       desc: 'Proyek perumahan tipe 36 di Cluster Bukit Freesia, Citra Indah City, Jonggol.',
-      tag: 'Residensial'
-    },
-    {
-      img: 'IMG-20260709-WA0048.jpg',
-      fallback: 'IMG-20260709-WA0048.jpg',
+      tag: 'Residensial' },
+    { img: 'IMG-20260709-WA0048.jpg', fallback: 'IMG-20260709-WA0048.jpg',
       title: 'Bukit Permai Tipe 89',
       desc: 'Pembangunan dan renovasi rumah tipe 89 di Cluster Bukit Permai.',
-      tag: 'Residensial'
-    },
-    {
-      img: 'IMG-20260709-WA0034.jpg',
-      fallback: 'IMG-20260709-WA0034.jpg',
+      tag: 'Residensial' },
+    { img: 'IMG-20260709-WA0034.jpg', fallback: 'IMG-20260709-WA0034.jpg',
       title: 'Bukit Freesia Tipe 47 & 39',
       desc: 'Proyek pembangunan cluster besar tipe 47 dan 39 di Bukit Freesia yang telah selesai.',
-      tag: 'Residensial'
-    },
-
-    // --- Desain (single image) ---
-    {
-      img: 'IMG-20260709-WA0111.jpg',
-      fallback: 'IMG-20260709-WA0111.jpg',
+      tag: 'Residensial' },
+    { img: 'IMG-20260709-WA0111.jpg', fallback: 'IMG-20260709-WA0111.jpg',
       title: 'Rumah Cream Dormitory',
       desc: 'Gambar desain 3D, rumah cream dormitory - Tangerang.',
-      tag: 'Desain'
-    },
-    {
-      img: 'IMG-20260709-WA0114.jpg',
-      fallback: 'IMG-20260709-WA0114.jpg',
+      tag: 'Desain' },
+    { img: 'IMG-20260709-WA0114.jpg', fallback: 'IMG-20260709-WA0114.jpg',
       title: 'Bani Hafidz Center',
       desc: 'Gambar desain 3D, bani hafidz center - Subang.',
-      tag: 'Desain'
-    },
-    {
-      img: 'IMG-20260709-WA0112.jpg',
-      fallback: 'IMG-20260709-WA0112.jpg',
+      tag: 'Desain' },
+    { img: 'IMG-20260709-WA0112.jpg', fallback: 'IMG-20260709-WA0112.jpg',
       title: 'Sentul Edu Center & Residence',
       desc: 'Gambar desain 3D, sentul edu center & residence.',
-      tag: 'Desain'
-    },
-    {
-      img: 'IMG-20260714-WA0001.jpg',
-      fallback: 'IMG-20260714-WA0001.jpg',
+      tag: 'Desain' },
+    { img: 'IMG-20260714-WA0001.jpg', fallback: 'IMG-20260714-WA0001.jpg',
       title: 'Apartemen Ketapang',
       desc: 'Gambar desain 3D, apartemen ketapang.',
-      tag: 'Desain'
-    },
-
-    // --- Kolase: Taman ---
-    {
-      isCollage: true,
-      images: [
-        'IMG-20260709-WA0155.jpg',
-        'IMG-20260709-WA0154.jpg',
-        'IMG-20260709-WA0153.jpg'
-      ],
+      tag: 'Desain' },
+    { isCollage: true,
+      images: ['IMG-20260709-WA0155.jpg', 'IMG-20260709-WA0154.jpg', 'IMG-20260709-WA0153.jpg'],
       fallback: 'IMG-20260709-WA0155.jpg',
       title: 'Taman',
       desc: 'Desain outdoor menghadirkan lingkungan yang asri melalui perpaduan material kayu, pepohonan, dan elemen air.',
-      tag: 'Desain Interior'
-    },
-
-    // --- Kolase: Mushola ---
-    {
-      isCollage: true,
-      images: [
-        'IMG-20260709-WA0133.jpg',
-        'IMG-20260709-WA0139.jpg',
-        'IMG-20260709-WA0135.jpg',
-        'IMG-20260709-WA0138.jpg'
-      ],
+      tag: 'Desain Interior' },
+    { isCollage: true,
+      images: ['IMG-20260709-WA0133.jpg', 'IMG-20260709-WA0139.jpg', 'IMG-20260709-WA0135.jpg', 'IMG-20260709-WA0138.jpg'],
       fallback: 'IMG-20260709-WA0140.jpg',
       title: 'Mushola',
       desc: 'Mushola dengan desain interior yang estetik, nyaman, dan fungsional untuk tempat ibadah.',
-      tag: 'Desain Interior'
-    },
-
-    // --- Kolase: Ruang Ganti ---
-    {
-      isCollage: true,
-      images: [
-        'IMG-20260709-WA0136.jpg',
-        'IMG-20260709-WA0137.jpg'
-      ],
+      tag: 'Desain Interior' },
+    { isCollage: true,
+      images: ['IMG-20260709-WA0136.jpg', 'IMG-20260709-WA0137.jpg'],
       fallback: 'IMG-20260709-WA0136.jpg',
       title: 'Ruang Ganti',
       desc: 'Ruang ganti ini dirancang dengan konsep minimalis modern yang mengutamakan kenyamanan, kebersihan, dan efisiensi.',
-      tag: 'Desain Interior'
-    },
-
-    // --- Kolase: Ruang Kerja ---
-    {
-      isCollage: true,
-      images: [
-        'IMG-20260709-WA0141.jpg',
-        'IMG-20260709-WA0144.jpg'
-      ],
+      tag: 'Desain Interior' },
+    { isCollage: true,
+      images: ['IMG-20260709-WA0141.jpg', 'IMG-20260709-WA0144.jpg'],
       fallback: 'IMG-20260709-WA0141.jpg',
       title: 'Ruang Kerja',
       desc: 'Ruang kerja ini mengusung konsep modern minimalis dengan dominasi warna netral seperti putih, abu-abu, hitam, dan aksen kayu terang.',
-      tag: 'Desain Interior'
-    },
-
-    // --- Kolase: Cafetaria (1) ---
-    {
-      isCollage: true,
-      images: [
-        'IMG-20260709-WA0126.jpg',
-        'IMG-20260709-WA0130.jpg',
-        'IMG-20260709-WA0131.jpg',
-        'IMG-20260709-WA0132.jpg'
-      ],
+      tag: 'Desain Interior' },
+    { isCollage: true,
+      images: ['IMG-20260709-WA0126.jpg', 'IMG-20260709-WA0130.jpg', 'IMG-20260709-WA0131.jpg', 'IMG-20260709-WA0132.jpg'],
       fallback: 'IMG-20260709-WA0126.jpg',
       title: 'Cafetaria',
       desc: 'Desain cafetaria ini mengombinasikan nuansa modern dengan sentuhan natural melalui penggunaan material kayu dan pencahayaan alami.',
-      tag: 'Desain Interior'
-    },
-
-    // --- Kolase: Cafetaria (2) ---
-    {
-      isCollage: true,
-      images: [
-        'IMG-20260709-WA0148.jpg',
-        'IMG-20260709-WA0149.jpg',
-        'IMG-20260709-WA0150.jpg',
-        'IMG-20260709-WA0151.jpg'
-      ],
+      tag: 'Desain Interior' },
+    { isCollage: true,
+      images: ['IMG-20260709-WA0148.jpg', 'IMG-20260709-WA0149.jpg', 'IMG-20260709-WA0150.jpg', 'IMG-20260709-WA0151.jpg'],
       fallback: 'IMG-20260709-WA0148.jpg',
       title: 'Cafetaria',
       desc: 'Area lounge ini dirancang dengan mengusung konsep modern kontemporer yang mengutamakan keseimbangan antara aspek estetika, kenyamanan, dan fungsionalitas.',
-      tag: 'Desain Interior'
-    }
+      tag: 'Desain Interior' }
   ];
 
-  /* ----------------------------------------------------------------
-     8. GALERI — RENDER
-     ---------------------------------------------------------------- */
+  // Render galeri
   const galeriGrid = document.getElementById('galeriGrid');
 
   if (galeriGrid) {
@@ -515,9 +458,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     galeriGrid.innerHTML = html;
 
-    /* ----------------------------------------------------------------
-       9. LIGHTBOX
-       ---------------------------------------------------------------- */
+    // Lightbox
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCaption = document.getElementById('lightboxCaption');
@@ -527,7 +468,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function openLightbox(src, fallback, title, desc) {
       if (!lightbox || !lightboxImg) return;
-
       lastFocused = document.activeElement;
 
       lightboxImg.onerror = function () {
@@ -558,7 +498,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    // Klik hanya pada area gambar yang memicu lightbox
     galeriGrid.querySelectorAll('.galeri-item').forEach(function (card) {
       const imageWrap = card.querySelector('.galeri-image');
       if (!imageWrap) return;
@@ -574,17 +513,17 @@ document.addEventListener('DOMContentLoaded', function () {
           ? (parseInt(clickedImg.dataset.photo, 10) || 0)
           : 0;
 
-        // Kolase → buka gambar yang benar-benar diklik
-        // Single image → buka item.img
         const src = item.isCollage ? item.images[photoIndex] : item.img;
-
         openLightbox(src, item.fallback, item.title, item.desc);
+
+        trackEvent('view_gallery_item', {
+          item_title: item.title,
+          item_tag: item.tag
+        });
       });
     });
 
-    if (lightboxClose) {
-      lightboxClose.addEventListener('click', closeLightbox);
-    }
+    if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
     if (lightbox) {
       lightbox.addEventListener('click', function (e) {
         if (e.target === lightbox) closeLightbox();
@@ -597,16 +536,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ----------------------------------------------------------------
-     10. FORM KONTAK → WHATSAPP
-     
-     Alur:
-     1. User isi form → klik "Kirim Pesan"
-     2. Validasi HTML5
-     3. Data dirakit jadi pesan terformat
-     4. Buka wa.me dengan pesan terisi (tab baru)
-     5. Form direset + pesan sukses muncul
-     ---------------------------------------------------------------- */
+  // Form kontak → WhatsApp + Firestore
   const kontakForm = document.getElementById('kontakForm');
 
   if (kontakForm) {
@@ -619,17 +549,16 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const data = {
-        nama: (document.getElementById('nama') || {}).value
-          ? document.getElementById('nama').value.trim() : '',
-        email: (document.getElementById('email') || {}).value
-          ? document.getElementById('email').value.trim() : '',
-        subjek: (document.getElementById('subjek') || {}).value
-          ? document.getElementById('subjek').value.trim() : '',
-        pesan: (document.getElementById('pesan') || {}).value
-          ? document.getElementById('pesan').value.trim() : ''
+        type: 'kontak',
+        nama:   (document.getElementById('nama')   || {}).value ? document.getElementById('nama').value.trim()   : '',
+        email:  (document.getElementById('email')  || {}).value ? document.getElementById('email').value.trim()  : '',
+        subjek: (document.getElementById('subjek') || {}).value ? document.getElementById('subjek').value.trim() : '',
+        pesan:  (document.getElementById('pesan')  || {}).value ? document.getElementById('pesan').value.trim()  : ''
       };
 
-      // Rakit pesan WhatsApp
+      logToFirestore(data);
+      trackEvent('submit_contact_form', { subject: data.subjek });
+
       const waMessage =
         'Halo ' + CONFIG.companyName + ',\n\n' +
         'Saya ingin menghubungi Anda melalui website.\n\n' +
@@ -639,7 +568,6 @@ document.addEventListener('DOMContentLoaded', function () {
         '*Pesan:*\n' + data.pesan + '\n\n' +
         'Terima kasih.';
 
-      // UI feedback: tombol loading
       const btn = kontakForm.querySelector('button[type="submit"]');
       const originalHtml = btn ? btn.innerHTML : '';
       if (btn) {
@@ -647,11 +575,9 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.innerHTML = 'Membuka WhatsApp... <i class="fas fa-spinner fa-spin"></i>';
       }
 
-      // Delay kecil supaya UI loading state terlihat
       setTimeout(function () {
         openWhatsApp(waMessage);
 
-        // Reset form + tampilkan pesan sukses
         kontakForm.reset();
         if (btn) {
           btn.disabled = false;
@@ -672,15 +598,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ----------------------------------------------------------------
-     11. KONSULTASI GRATIS (footer) → WHATSAPP
-     
-     Alur:
-     1. User isi email di footer → klik tombol kirim
-     2. Email divalidasi
-     3. Buka WhatsApp dengan pesan terisi
-     4. Beri feedback visual di placeholder input
-     ---------------------------------------------------------------- */
+  // Konsultasi gratis → WhatsApp + Firestore
   const newsletterForm = document.getElementById('newsletterForm');
 
   if (newsletterForm) {
@@ -699,14 +617,15 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      // Rakit pesan konsultasi
+      logToFirestore({ type: 'konsultasi', email: email });
+      trackEvent('submit_consultation', { email: email });
+
       const waMessage =
         'Halo ' + CONFIG.companyName + ',\n\n' +
         'Saya ingin minta *konsultasi gratis* untuk proyek saya.\n\n' +
         '*Email saya:* ' + email + '\n\n' +
         'Mohon dihubungi kembali. Terima kasih.';
 
-      // UI feedback: tombol loading
       const btn = newsletterForm.querySelector('button[type="submit"]');
       const originalHtml = btn ? btn.innerHTML : '';
       if (btn) {
@@ -714,11 +633,9 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       }
 
-      // Buka WhatsApp di tab baru
       setTimeout(function () {
         openWhatsApp(waMessage);
 
-        // Reset + feedback
         newsletterInput.value = '';
         newsletterInput.placeholder = 'Terima kasih! WhatsApp akan terbuka...';
         if (btn) {
@@ -733,9 +650,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ----------------------------------------------------------------
-     12. BACK TO TOP
-     ---------------------------------------------------------------- */
+  // Back to top
   if (backToTop) {
     backToTop.addEventListener('click', function () {
       window.scrollTo({
@@ -744,5 +659,11 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
+
+  // Page view
+  trackEvent('page_view', {
+    page_title: document.title,
+    page_location: location.href
+  });
 
 });

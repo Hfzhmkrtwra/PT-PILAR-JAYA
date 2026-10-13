@@ -539,10 +539,10 @@ body {
   border-top: 1px solid var(--border);
 }
 
-/* Toast dengan ikon */
+/* Toast dengan ikon — posisi di atas */
 .toast {
   position: fixed;
-  bottom: 20px;
+  top: 20px;                            /* ← Toast muncul di atas */
   left: 50%;
   display: flex;
   align-items: center;
@@ -558,7 +558,7 @@ body {
   opacity: 0;
   z-index: 2000;
   pointer-events: none;
-  transform: translateX(-50%) translateY(100px);
+  transform: translateX(-50%) translateY(-100px);   /* ← Animasi turun dari atas */
   transition: all .3s;
 }
 
@@ -584,4 +584,9 @@ body {
   .admin-header-left small { display: none; }
   .tab-btn { padding: .8rem .9rem; font-size: .85rem; }
   .tab-btn i { display: none; }
+
+  /* Geser toast sedikit ke bawah supaya tidak menutupi header admin */
+  .toast {
+    top: 70px;
+  }
 }

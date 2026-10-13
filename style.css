@@ -74,7 +74,6 @@ button {
   cursor: pointer;
 }
 
-/* Focus outline untuk keyboard users */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -859,7 +858,6 @@ section {
   transition: transform 0.5s ease;
 }
 
-/* Hover: scale gambar individual, bukan seluruh grid */
 .galeri-image.collage-grid-2 img:hover,
 .galeri-image.collage-grid-3 img:hover,
 .galeri-image.collage-grid-4 img:hover {
@@ -1348,8 +1346,8 @@ section {
    == */
 .whatsapp-float {
   position: fixed;
-  bottom: 30px;
-  right: 90px;                    /* sebelah kiri tombol back-to-top */
+  bottom: 90px;                   /* ← DIUBAH: naik ke atas back-to-top */
+  right: 30px;                    /* ← DIUBAH: sejajar kanan dengan back-to-top */
   z-index: 998;
   display: flex;
   align-items: center;
@@ -1424,10 +1422,9 @@ section {
   }
 
   .kontak-form {
-    order: -1; /* Form di atas info di mobile */
+    order: -1;
   }
 
-  /* Timeline jadi satu kolom */
   .timeline-item {
     width: 100%;
     padding-right: 0;
@@ -1505,7 +1502,7 @@ section {
 
   /* Hero */
   .hero {
-    background-attachment: scroll; /* Hindari bug di mobile */
+    background-attachment: scroll;
     padding-top: 90px;
   }
 
@@ -1588,7 +1585,7 @@ section {
   }
 
   .nav-logo-text {
-    display: none; /* Logo saja, hemat ruang */
+    display: none;
   }
 
   .hero-logo-img img {
@@ -1638,8 +1635,8 @@ section {
   }
 
   .whatsapp-float {
-    bottom: 20px;
-    right: 74px;
+    bottom: 74px;                 /* ← DIUBAH: naik ke atas back-to-top */
+    right: 20px;                  /* ← DIUBAH: sejajar kanan dengan back-to-top */
     width: 42px;
     height: 42px;
     font-size: 1.4rem;

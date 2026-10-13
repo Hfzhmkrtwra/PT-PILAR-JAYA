@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin Dashboard — PT Pilar Jaya Kontruksi</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+
+<body>
+
+  <!-- Login -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-icon"><i class="fas fa-hard-hat"></i></div>
+      <h1>Admin Panel</h1>
+      <p>PT Pilar Jaya Kontruksi</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required autocomplete="email" placeholder="admin@email.com" />
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn btn-login" id="loginBtn">
+          Masuk <i class="fas fa-sign-in-alt"></i>
+        </button>
+        <p class="login-error" id="loginError" aria-live="polite"></p>
+      </form>
+      <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Kembali ke website
+      </a>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dashboard hidden" id="dashboard">
+
+    <header class="admin-header">
+      <div class="admin-header-left">
+        <i class="fas fa-hard-hat"></i>
+        <div>
+          <strong>Admin Dashboard</strong>
+          <small>PT Pilar Jaya Kontruksi</small>
+        </div>
+      </div>
+      <div class="admin-header-right">
+        <span class="admin-email" id="adminEmail"></span>
+        <a href="index.html" class="btn-icon" title="Lihat website" target="_blank" rel="noopener">
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <button class="btn-icon btn-logout" id="logoutBtn" title="Keluar" aria-label="Keluar">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </header>
+
+    <nav class="admin-tabs">
+      <button class="tab-btn active" data-tab="galeri">
+        <i class="fas fa-images"></i> Galeri
+      </button>
+      <button class="tab-btn" data-tab="testimonial">
+        <i class="fas fa-quote-left"></i> Testimoni
+      </button>
+      <button class="tab-btn" data-tab="klien">
+        <i class="fas fa-handshake"></i> Klien
+      </button>
+      <button class="tab-btn" data-tab="pesan">
+        <i class="fas fa-envelope"></i> Pesan Masuk
+      </button>
+    </nav>
+
+    <main class="admin-main">
+
+      <!-- Galeri -->
+      <section class="tab-content active" id="tab-galeri">
+        <div class="tab-header">
+          <div>
+            <h2>Galeri Proyek</h2>
+            <p>Kelola foto dan deskripsi proyek yang tampil di website.</p>
+          </div>
+          <button class="btn btn-primary" data-add="galeri">
+            <i class="fas fa-plus"></i> Tambah Proyek
+          </button>
+        </div>
+        <div class="items-list" id="list-galeri">
+          <div class="empty-state">
+            <i class="fas fa-spinner fa-spin"></i> Memuat...
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimoni -->
+      <section class="tab-content" id="tab-testimonial">
+        <div class="tab-header">
+          <div>
+            <h2>Testimoni Klien</h2>
+            <p>Ucapan dan feedback dari klien yang puas.</p>
+          </div>
+          <button class="btn btn-primary" data-add="testimonial">
+            <i class="fas fa-plus"></i> Tambah Testimoni
+          </button>
+        </div>
+        <div class="items-list" id="list-testimonial">
+          <div class="empty-state">
+            <i class="fas fa-spinner fa-spin"></i> Memuat...
+          </div>
+        </div>
+      </section>
+
+      <!-- Klien -->
+      <section class="tab-content" id="tab-klien">
+        <div class="tab-header">
+          <div>
+            <h2>Klien &amp; Mitra</h2>
+            <p>Daftar perusahaan yang bekerja sama dengan Anda.</p>
+          </div>
+          <button class="btn btn-primary" data-add="klien">
+            <i class="fas fa-plus"></i> Tambah Klien
+          </button>
+        </div>
+        <div class="items-list" id="list-klien">
+          <div class="empty-state">
+            <i class="fas fa-spinner fa-spin"></i> Memuat...
+          </div>
+        </div>
+      </section>
+
+      <!-- Pesan Masuk -->
+      <section class="tab-content" id="tab-pesan">
+        <div class="tab-header">
+          <div>
+            <h2>Pesan Masuk</h2>
+            <p>Pesan dari form kontak &amp; konsultasi gratis.</p>
+          </div>
+        </div>
+        <div class="items-list" id="list-pesan">
+          <div class="empty-state">
+            <i class="fas fa-spinner fa-spin"></i> Memuat...
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal Form -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Tambah Item</h3>
+        <button class="btn-close" id="modalClose" aria-label="Tutup">&times;</button>
+      </div>
+      <form id="modalForm">
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="modalCancel">Batal</button>
+          <button type="submit" class="btn btn-primary" id="modalSave">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- Admin JS -->
+  <script src="admin.js"></script>
+
+</body>
+</html>

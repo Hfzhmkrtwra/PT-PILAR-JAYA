@@ -2,9 +2,9 @@
 <html lang="id">
 
 <head>
-  <meta name="google-site-verification" content="eLuLDIxAt5Hm8l0wPvHtFNChbg8z6dXCd5U3uz3nTko" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="eLuLDIxAt5Hm8l0wPvHtFNChbg8z6dXCd5U3uz3nTko" />
   <meta name="description" content="PT Pilar Jaya Kontruksi — perusahaan konstruksi terpercaya di bidang konstruksi umum, pekerjaan sipil, sumber daya air, desain interior, dan penyedia tenaga kerja bersertifikat." />
   <meta name="theme-color" content="#1a3a5c" />
   <title>PT Pilar Jaya Kontruksi - Mitra Konstruksi Terpercaya</title>
@@ -322,6 +322,16 @@
 
         <form class="kontak-form" id="kontakForm" novalidate>
           <h3>Kirim Pesan</h3>
+
+          <!-- Honeypot: field tersembunyi untuk mendeteksi bot -->
+          <input type="text"
+                 name="website"
+                 id="honeypot"
+                 tabindex="-1"
+                 autocomplete="off"
+                 aria-hidden="true"
+                 style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" />
+
           <div class="form-group">
             <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" required autocomplete="name" />
           </div>

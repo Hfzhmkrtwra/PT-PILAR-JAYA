@@ -1,5 +1,5 @@
 /* PT PILAR JAYA KONTRUKSI — main.js
-   Firebase + WhatsApp + Galeri + Lightbox + Form
+   Firebase + WhatsApp + Galeri + Lightbox + Form + Anti-bot Honeypot
    Collection: pilarjayakontruksi (form), galeri, testimonial, klien (konten)
 */
 document.addEventListener('DOMContentLoaded', function () {
@@ -93,6 +93,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const win = window.open(url, '_blank', 'noopener,noreferrer');
     if (!win) window.location.href = url;
     return !!win;
+  }
+
+  // Anti-bot: cek honeypot — return true kalau terdeteksi bot
+  function isBot() {
+    var honeypot = document.getElementById('honeypot');
+    if (honeypot && honeypot.value) {
+      console.log('[Anti-bot] Honeypot terisi — submit diabaikan.');
+      return true;
+    }
+    return false;
   }
 
   // Init Firebase
@@ -581,6 +591,9 @@ document.addEventListener('DOMContentLoaded', function () {
     kontakForm.addEventListener('submit', function (e) {
       e.preventDefault();
 
+      // Anti-bot: honeypot
+      if (isBot()) return;
+
       if (!kontakForm.checkValidity()) {
         kontakForm.reportValidity();
         return;
@@ -645,6 +658,9 @@ document.addEventListener('DOMContentLoaded', function () {
     newsletterForm.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!newsletterInput) return;
+
+      // Anti-bot: honeypot
+      if (isBot()) return;
 
       const email = newsletterInput.value.trim();
       if (!email) { newsletterInput.focus(); return; }
